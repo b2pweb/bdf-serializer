@@ -68,10 +68,10 @@ class TypeFactory
         }
 
         if ($collectionType) {
-            $collectionType = static::createType($collectionType);
+            $collectionType = self::createType($collectionType);
         }
 
-        return new Type($type, static::isBuildinType($type), $collection, $collectionType);
+        return new Type($type, self::isBuildinType($type), $collection, $collectionType);
     }
 
     /**
@@ -83,7 +83,7 @@ class TypeFactory
      */
     public static function fromValue($value): Type
     {
-        $type = static::normalizeType(gettype($value));
+        $type = self::normalizeType(gettype($value));
 
         return static::createType($type);
     }
@@ -97,7 +97,7 @@ class TypeFactory
      */
     public static function isBuildinType($type): bool
     {
-        return isset(static::$builtin[$type]);
+        return isset(self::$builtin[$type]);
     }
 
     /**
@@ -119,8 +119,8 @@ class TypeFactory
      */
     private static function normalizeType($type): string
     {
-        if (isset(static::$mapping[$type])) {
-            return static::$mapping[$type];
+        if (isset(self::$mapping[$type])) {
+            return self::$mapping[$type];
         }
 
         return $type;

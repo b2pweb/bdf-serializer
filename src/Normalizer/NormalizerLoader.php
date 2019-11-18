@@ -12,7 +12,7 @@ class NormalizerLoader implements NormalizerLoaderInterface
     /**
      * Normalizers associated to a class name
      *
-     * @var NormalizerInterface[string]
+     * @var NormalizerInterface[]
      */
     private $cached = [];
 

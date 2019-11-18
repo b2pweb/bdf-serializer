@@ -33,7 +33,7 @@ class AccessorGuesser
      */
     public static function guessAccessor(ReflectionClass $reflection, string $property, array $options = null): PropertyAccessorInterface
     {
-        $reflection = static::getPropertyOwner($reflection, $property);
+        $reflection = self::getPropertyOwner($reflection, $property);
 
         // use reflection accessor if not set. Guess if property is public to use tue public accessor
         if ($options === null) {
@@ -41,7 +41,7 @@ class AccessorGuesser
                 return new PublicAccessor($reflection->name, $property);
             }
 
-            if (static::$useClosure) {
+            if (self::$useClosure) {
                 return new ClosureAccessor($reflection->name, $property);
             }
 
@@ -128,7 +128,7 @@ class AccessorGuesser
      */
     public static function useClosureAccessor($flag): void
     {
-        static::$useClosure = (bool)$flag;
+        self::$useClosure = (bool)$flag;
     }
 
     /**

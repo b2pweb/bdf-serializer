@@ -43,7 +43,7 @@ class AnnotationsDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function getMetadataForClass(ReflectionClass $class): ClassMetadata
+    public function getMetadataForClass(ReflectionClass $class): ?ClassMetadata
     {
         if ($class->isInterface() || $class->isAbstract()) {
             return null;
