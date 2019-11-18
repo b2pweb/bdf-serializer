@@ -12,8 +12,6 @@ use Bdf\Serializer\Normalizer\NormalizerLoader;
 use Bdf\Serializer\Normalizer\PropertyNormalizer;
 use Bdf\Serializer\Normalizer\TraversableNormalizer;
 use Psr\SimpleCache\CacheInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Builder for serializer.
@@ -56,16 +54,12 @@ class SerializerBuilder
     /**
      * Set the cache
      * 
-     * @param CacheInterface|string $cache  If cache is a string, it wille be considered as filesystem cache directory.
+     * @param CacheInterface $cache  The cache driver.
      *
      * @return $this
      */
-    public function setCache($cache)
+    public function setCache(CacheInterface $cache)
     {
-        if (is_string($cache)) {
-            $cache = new Psr16Cache(new FilesystemAdapter('', 0, $cache));
-        }
-
         $this->cache = $cache;
 
         return $this;
