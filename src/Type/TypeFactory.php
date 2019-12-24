@@ -62,7 +62,7 @@ class TypeFactory
         } elseif ($type === Type::TARRAY) { // array
             $collectionType = Type::MIXED;
             $collection = true;
-        } elseif (($pos = strpos($type, '<')) !== false && $type{strlen($type) - 1} === '>') { // Type<SubType> syntax
+        } elseif (($pos = strpos($type, '<')) !== false && $type[strlen($type) - 1] === '>') { // Type<SubType> syntax
             $collectionType = substr($type, $pos + 1, -1);
             $type = substr($type, 0, $pos);
         }
