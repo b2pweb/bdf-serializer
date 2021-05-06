@@ -76,6 +76,13 @@ class PropertyMetadata
     public $readOnly = false;
 
     /**
+     * The inline state of the property.
+     *
+     * @var bool
+     */
+    public $inline = false;
+
+    /**
      * The default value of the property.
      *
      * @var mixed
@@ -306,6 +313,30 @@ class PropertyMetadata
     public function readOnly()
     {
         return $this->readOnly;
+    }
+
+    /**
+     * Set the property inline.
+     *
+     * The result of the normalization of this property
+     * will be add on the same layer of the property.
+     * Works only if the normalization of this property is an array.
+     *
+     * @param bool $flag
+     */
+    public function setInline(bool $flag)
+    {
+        $this->inline = $flag;
+    }
+
+    /**
+     * Get the inline state of the property.
+     *
+     * @return bool
+     */
+    public function inline(): bool
+    {
+        return $this->inline;
     }
 
     /**

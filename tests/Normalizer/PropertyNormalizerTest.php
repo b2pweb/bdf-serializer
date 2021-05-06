@@ -133,6 +133,41 @@ class PropertyNormalizerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function test_inline_property_with_complex_value()
+    {
+        $serializer =  SerializerBuilder::create()->build();
+
+        $object = new InlineEntity();
+        $object->age = 18;
+        $object->entity = new EntityWithValueToSkip();
+
+        $result = $serializer->toArray($object);
+
+        $this->assertSame(18, $result['age']);
+        $this->assertSame('john', $result['firstName']);
+        $this->assertSame('doe', $result['lastName']);
+    }
+
+    /**
+     *
+     */
+    public function test_inline_property_with_scalar_value()
+    {
+        $serializer =  SerializerBuilder::create()->build();
+
+        $object = new InlineEntity();
+        $object->age = 18;
+        $object->entity = 'foo';
+
+        $result = $serializer->toArray($object);
+
+        $this->assertSame(18, $result['age']);
+        $this->assertSame('foo', $result['entity']);
+    }
+
+    /**
      * @return PropertyNormalizer
      */
     private function getNormalizer()
@@ -178,5 +213,19 @@ class EntityWithValueToSkip
     {
         $metadata->string('firstName')->conserveDefault();
         $metadata->string('lastName');
+    }
+}
+class InlineEntity
+{
+    public $entity;
+    public $age;
+
+    /**
+     * @param ClassMetadataBuilder $metadata
+     */
+    public static function loadSerializerMetadata($metadata)
+    {
+        $metadata->add('entity', EntityWithValueToSkip::class)->inline();
+        $metadata->integer('age');
     }
 }

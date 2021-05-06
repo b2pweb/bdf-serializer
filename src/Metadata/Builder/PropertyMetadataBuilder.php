@@ -81,6 +81,13 @@ class PropertyMetadataBuilder
     private $readOnly;
 
     /**
+     * The inline state of the property.
+     *
+     * @var bool
+     */
+    private $inline;
+
+    /**
      * The context options for normalization.
      *
      * @var null|array
@@ -121,6 +128,7 @@ class PropertyMetadataBuilder
         $property->setSince($this->since);
         $property->setUntil($this->until);
         $property->setReadOnly($this->readOnly === true);
+        $property->setInline($this->inline === true);
         $property->setNormalizationOptions($this->normalizationOptions);
         $property->setDenormalizationOptions($this->denormalizationOptions);
 
@@ -320,6 +328,21 @@ class PropertyMetadataBuilder
     public function readOnly(bool $flag = true)
     {
         $this->readOnly = $flag;
+
+        return $this;
+    }
+
+    /**
+     * Set the property inline.
+     * The properties of this property will be added as the same level.
+     *
+     * @param bool $flag
+     *
+     * @return $this
+     */
+    public function inline(bool $flag = true)
+    {
+        $this->inline = $flag;
 
         return $this;
     }

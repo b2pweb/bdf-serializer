@@ -68,7 +68,11 @@ class PropertyNormalizer implements NormalizerInterface
                 continue;
             }
 
-            $normalized[$property->alias] = $value;
+            if ($property->inline && is_array($value)) {
+                $normalized += $value;
+            } else {
+                $normalized[$property->alias] = $value;
+            }
         }
 
         $context->releaseReference($hash);

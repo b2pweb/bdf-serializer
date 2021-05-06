@@ -28,6 +28,7 @@ class PropertyMetadataTest extends TestCase
         $this->assertSame(null, $metadata->since());
         $this->assertSame(null, $metadata->until());
         $this->assertSame(false, $metadata->readOnly());
+        $this->assertSame(false, $metadata->inline());
         $this->assertSame(null, $metadata->defaultValue());
     }
 
@@ -127,6 +128,17 @@ class PropertyMetadataTest extends TestCase
         $metadata->setReadOnly(true);
 
         $this->assertTrue($metadata->readOnly());
+    }
+
+    /**
+     *
+     */
+    public function test_get_set_inline()
+    {
+        $metadata = $this->getMetadata();
+        $metadata->setInline(true);
+
+        $this->assertTrue($metadata->inline());
     }
 
     /**

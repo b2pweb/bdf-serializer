@@ -229,6 +229,18 @@ class PropertyMetadataBuilderTest extends TestCase
     /**
      *
      */
+    public function test_inline()
+    {
+        $builder = $this->propertyBuilder(User::class);
+        $builder->inline();
+        $metadata = $builder->build();
+
+        $this->assertTrue($metadata->inline());
+    }
+
+    /**
+     *
+     */
     public function test_normalization()
     {
         $builder = $this->propertyBuilder(User::class);
