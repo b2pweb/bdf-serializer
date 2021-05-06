@@ -31,7 +31,7 @@ class MethodAccessorTest extends TestCase
      */
     public function test_custom_setter_and_getter()
     {
-        $accessor = new MethodAccessor(TestCustomMethodAccessor::class, 'id', 'setCustomId', 'customId');
+        $accessor = new MethodAccessor(TestCustomMethodAccessor::class, 'id', 'customId', 'setCustomId');
 
         $object = new TestCustomMethodAccessor();
 

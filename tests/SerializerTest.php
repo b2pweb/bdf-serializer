@@ -590,4 +590,18 @@ class SerializerTest extends TestCase
         // But if there is a side-effect or the previous call, serializer will try to hydrate a User object
         $this->assertEquals(new ObjectWithUndefinedPropertyType('my string value'), $serializer->fromArray(['attr' => 'my string value'], ObjectWithUndefinedPropertyType::class));
     }
+
+    /**
+     *
+     */
+    public function test_encode_with_accessor()
+    {
+        $serializer = SerializerBuilder::create()->build();
+        $object = new ObjectWithAccesors('foo');
+
+        $this->assertSame('{"data":"formatted-foo"}', $serializer->toJson($object));
+
+        $object = $serializer->fromJson('{"data":"formatted-foo"}', ObjectWithAccesors::class);
+        $this->assertSame('foo', $object->data());
+    }
 }

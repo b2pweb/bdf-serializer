@@ -281,3 +281,43 @@ class ObjectWithUndefinedPropertyType
         $this->attr = $attr;
     }
 }
+
+class ObjectWithAccesors
+{
+    private $data;
+
+    public function __construct(string $data = null)
+    {
+        $this->data = $data;
+    }
+
+    public function data(): ?string
+    {
+        return $this->data;
+    }
+
+    public function formattedData(): string
+    {
+        return 'formatted-'.$this->data;
+    }
+
+    public function setData(string $data)
+    {
+        $this->data = $data;
+    }
+
+    public function setFormattedData(string $data)
+    {
+        $this->data = str_replace('formatted-', '', $data);
+    }
+
+    /**
+     * @param ClassMetadataBuilder $metadata
+     */
+    public static function loadSerializerMetadata($metadata)
+    {
+        $metadata->string('data')
+            ->readWith('formattedData')
+            ->writeWith('setFormattedData');
+    }
+}

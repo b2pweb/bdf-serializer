@@ -38,14 +38,14 @@ class MethodAccessor implements PropertyAccessorInterface
      *
      * @param string $entityClass
      * @param string $property
-     * @param string $setter
      * @param string $getter
+     * @param string $setter
      */
-    public function __construct($class, $property, $setter = null, $getter = null)
+    public function __construct($class, $property, $getter = null, $setter = null)
     {
         $this->property = $property;
-        $this->setter = $setter ?: AccessorGuesser::guessSetter($class, $property);
         $this->getter = $getter ?: AccessorGuesser::guessGetter($class, $property);
+        $this->setter = $setter ?: AccessorGuesser::guessSetter($class, $property);
     }
 
     /**
