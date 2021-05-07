@@ -97,7 +97,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
 
         $normalized = $this->loader->getNormalizer($data)->normalize($data, $context);
 
-        if ($context->option(NormalizationContext::META_TYPE)) {
+        if ($context->includeMetaType()) {
             return [
                 '@type' => get_class($data),
                 'data'  => $normalized,

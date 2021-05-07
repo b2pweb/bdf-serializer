@@ -34,7 +34,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_normalize_date_property()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new EntityWithDate();
         $object->date = new DateTime('2017-06-28T12:32:26+01:00');
@@ -51,7 +51,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_denormalize_date_property()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $array = ['date' => '28/06/2017 11:32:26', 'basicDate' => '2017-06-28T12:32:26+0100'];
         $expected = new DateTime('2017-06-28T12:32:26+01:00');
@@ -70,7 +70,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_priority_on_property_options()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new EntityWithDate();
         $object->date = new DateTime('2017-06-28T12:32:26+01:00');
@@ -85,7 +85,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_null_property_option()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new EntityWithDate();
 
@@ -102,7 +102,7 @@ class PropertyNormalizerTest extends TestCase
     {
         $this->expectException(CircularReferenceException::class);
 
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new EntityWithCircularRef();
         $object->ref = $object;
@@ -115,7 +115,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_default_value_property()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new EntityWithValueToSkip();
         $result = $serializer->toArray($object);
@@ -137,7 +137,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_inline_property_with_complex_value()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new InlineEntity();
         $object->age = 18;
@@ -155,7 +155,7 @@ class PropertyNormalizerTest extends TestCase
      */
     public function test_inline_property_with_scalar_value()
     {
-        $serializer =  SerializerBuilder::create()->build();
+        $serializer = SerializerBuilder::create()->build();
 
         $object = new InlineEntity();
         $object->age = 18;
@@ -165,6 +165,24 @@ class PropertyNormalizerTest extends TestCase
 
         $this->assertSame(18, $result['age']);
         $this->assertSame('foo', $result['entity']);
+    }
+
+    /**
+     *
+     */
+    public function test_inline_with_metadata()
+    {
+        $serializer = SerializerBuilder::create()->build();
+
+        $object = new InlineEntity();
+        $object->age = 18;
+        $object->entity = new EntityWithValueToSkip();
+
+        $result = $serializer->toArray($object, [NormalizationContext::META_TYPE => true]);
+
+        $this->assertSame(18, $result['data']['age']);
+        $this->assertSame('john', $result['data']['entity']['data']['firstName']);
+        $this->assertSame('doe', $result['data']['entity']['data']['lastName']);
     }
 
     /**

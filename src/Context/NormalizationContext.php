@@ -159,6 +159,16 @@ class NormalizationContext extends Context
     }
 
     /**
+     * Should add metadata of type into the serialization
+     *
+     * @return bool
+     */
+    public function includeMetaType(): bool
+    {
+        return $this->options[self::META_TYPE];
+    }
+
+    /**
      * Skip the property by its value
      *
      * @param PropertyMetadata $property

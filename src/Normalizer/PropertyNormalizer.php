@@ -68,7 +68,7 @@ class PropertyNormalizer implements NormalizerInterface
                 continue;
             }
 
-            if ($property->inline && is_array($value)) {
+            if ($property->inline && is_array($value) && !$context->includeMetaType()) {
                 $normalized += $value;
             } else {
                 $normalized[$property->alias] = $value;

@@ -26,6 +26,7 @@ class NormalizationContextTest extends TestCase
         $this->assertSame(null, $context->excludeProperties());
         $this->assertSame(null, $context->includeProperties());
         $this->assertSame(false, $context->shouldAddNull());
+        $this->assertSame(false, $context->includeMetaType());
         $this->assertSame(null, $context->option('unknown'));
         $this->assertEquals($this->serializer(), $context->root());
     }
