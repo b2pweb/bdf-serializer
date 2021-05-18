@@ -5,6 +5,7 @@ namespace Bdf\Serializer\Metadata\Builder;
 use Bdf\Serializer\Context\DenormalizationContext;
 use Bdf\Serializer\Context\NormalizationContext;
 use Bdf\Serializer\Metadata\PropertyMetadata;
+use Bdf\Serializer\PropertyAccessor\MethodAccessor;
 use Bdf\Serializer\PropertyAccessor\PropertyAccessorInterface;
 use Bdf\Serializer\Type\TypeFactory;
 use Bdf\Serializer\Util\AccessorGuesser;
@@ -57,7 +58,21 @@ class PropertyMetadataBuilder
      *
      * @var PropertyAccessorInterface|array
      */
-    private $accessor;
+    private $customAccessor;
+
+    /**
+     * The getter accessor
+     *
+     * @var PropertyAccessorInterface|string
+     */
+    private $getter;
+
+    /**
+     * The setter accessor
+     *
+     * @var PropertyAccessorInterface|string
+     */
+    private $setter;
 
     /**
      * The version when the property has been added.
@@ -124,7 +139,7 @@ class PropertyMetadataBuilder
         $property->setType(TypeFactory::createType($this->type));
         $property->setAlias($this->alias ?: $this->name);
         $property->setGroups($this->groups);
-        $property->setAccessor($this->buildAccessor($this->accessor));
+        $property->setAccessor($this->buildAccessor());
         $property->setSince($this->since);
         $property->setUntil($this->until);
         $property->setReadOnly($this->readOnly === true);
@@ -137,23 +152,27 @@ class PropertyMetadataBuilder
             $property->setDefaultValue($defaultValues[$this->name]);
         }
 
+        $this->clear();
+
         return $property;
     }
 
     /**
      * Build the property accessor
      *
-     * @param mixed $accessor
-     *
      * @return PropertyAccessorInterface
      */
-    private function buildAccessor($accessor): PropertyAccessorInterface
+    private function buildAccessor(): PropertyAccessorInterface
     {
-        if ($accessor instanceof PropertyAccessorInterface) {
-            return $accessor;
+        if ($this->customAccessor instanceof PropertyAccessorInterface) {
+            return $this->customAccessor;
         }
 
-        return AccessorGuesser::guessAccessor($this->reflection, $this->name, $accessor);
+        if ($this->setter !== null || $this->getter !== null) {
+            return AccessorGuesser::getMethodAccessor($this->reflection, $this->name, $this->getter, $this->setter, $this->readOnly === true);
+        }
+
+        return AccessorGuesser::getPropertyAccessor($this->reflection, $this->name);
     }
 
     /**
@@ -263,13 +282,13 @@ class PropertyMetadataBuilder
     /**
      * Set the property accessor
      *
-     * @param PropertyAccessorInterface|array $accessor
+     * @param PropertyAccessorInterface $accessor
      *
      * @return $this
      */
-    public function accessor($accessor)
+    public function accessor(PropertyAccessorInterface $accessor)
     {
-        $this->accessor = $accessor;
+        $this->customAccessor = $accessor;
 
         return $this;
     }
@@ -279,13 +298,13 @@ class PropertyMetadataBuilder
      *
      * A accessor as string will be considered as a method
      *
-     * @param PropertyAccessorInterface|string $accessor
+     * @param PropertyAccessorInterface|string $getter
      *
      * @return $this
      */
-    public function readWith($accessor)
+    public function readWith($getter)
     {
-        $this->accessor['reader'] = $accessor;
+        $this->getter = $getter;
 
         return $this;
     }
@@ -293,13 +312,28 @@ class PropertyMetadataBuilder
     /**
      * Set the property accessor
      *
-     * @param PropertyAccessorInterface|string $accessor
+     * @param PropertyAccessorInterface|string $setter
      *
      * @return $this
      */
-    public function writeWith($accessor)
+    public function writeWith($setter)
     {
-        $this->accessor['writer'] = $accessor;
+        $this->setter = $setter;
+
+        return $this;
+    }
+
+    /**
+     * Set a virtual property.
+     *
+     * @param string $getter
+     *
+     * @return $this
+     */
+    public function virtual(string $getter)
+    {
+        $this->readWith($getter);
+        $this->readOnly();
 
         return $this;
     }
@@ -512,5 +546,13 @@ class PropertyMetadataBuilder
         }
         
         return $this;
+    }
+
+    /**
+     * Clear all reference
+     */
+    private function clear()
+    {
+        $this->customAccessor = $this->setter = $this->getter = null;
     }
 }

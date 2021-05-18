@@ -3,29 +3,13 @@
 namespace Bdf\Serializer\PropertyAccessor;
 
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 /**
- * @group Bdf_Serializer
- * @group Bdf_Serializer_PropertyAccessor
+ *
  */
 class MethodAccessorTest extends TestCase
 {
-    /**
-     *
-     */
-    public function test_guessing_setter_and_getter()
-    {
-        $accessor = new MethodAccessor(TestMethodAccessor::class, 'id');
-
-        $object = new TestMethodAccessor();
-
-        $accessor->write($object, 12);
-        $this->assertEquals(12, $object->id());
-
-        $accessor->read($object);
-        $this->assertEquals(12, $accessor->read($object));
-    }
-
     /**
      *
      */
@@ -40,6 +24,32 @@ class MethodAccessorTest extends TestCase
 
         $accessor->read($object);
         $this->assertEquals(12, $accessor->read($object));
+    }
+
+    /**
+     *
+     */
+    public function test_desactivation_write()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $accessor = new MethodAccessor(TestMethodAccessor::class, 'id');
+        $object = new TestMethodAccessor();
+
+        $accessor->write($object, 1);
+    }
+
+    /**
+     *
+     */
+    public function test_desactivation_read()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $accessor = new MethodAccessor(TestMethodAccessor::class, 'id');
+        $object = new TestMethodAccessor();
+
+        $accessor->read($object);
     }
 
 }

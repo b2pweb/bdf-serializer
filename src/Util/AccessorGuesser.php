@@ -30,53 +30,89 @@ class AccessorGuesser
      * @param array $options
      *
      * @return PropertyAccessorInterface
+     *
+     * @deprecated Use getMethodAccessor or getPropertyAccessor instead of
      */
     public static function guessAccessor(ReflectionClass $reflection, string $property, array $options = null): PropertyAccessorInterface
+    {
+        // use reflection accessor if not set. Guess if property is public to use tue public accessor
+        if ($options === null) {
+            return self::getPropertyAccessor($reflection, $property);
+        }
+
+        return self::getMethodAccessor($reflection, $property, $options['reader'] ?? null, $options['writer'] ?? null, $options['readOnly'] ?? false);
+    }
+
+    /**
+     * Guess which method accessor suit the property
+     *
+     * @param ReflectionClass $reflection
+     * @param string $property
+     * @param PropertyAccessorInterface|string|null $getter
+     * @param PropertyAccessorInterface|string|null $setter
+     *
+     * @return PropertyAccessorInterface
+     */
+    public static function getMethodAccessor(ReflectionClass $reflection, $property, $getter, $setter, bool $readOnly = false): PropertyAccessorInterface
+    {
+        // If accessor is an array, it should have reader and writer keys.
+        // The reader and the writer are methods, the method accessor will be used
+        // Otherwise, the delegate accessor will be built with defined accessors.
+        if (is_string($getter) && is_string($setter)) {
+            return new MethodAccessor($reflection->name, $property, $getter, $setter);
+        }
+
+        if ($getter !== null) {
+            if ($getter instanceof PropertyAccessorInterface) {
+                $reader = $getter;
+            } else {
+                $reader = new MethodAccessor($reflection->name, $property, $getter);
+            }
+        } else {
+            $reader = static::getPropertyAccessor($reflection, $property);
+        }
+
+        if ($readOnly) {
+            return $reader;
+        }
+
+        if ($setter !== null) {
+            if ($setter instanceof PropertyAccessorInterface) {
+                $writter = $setter;
+            } else {
+                $writter = new MethodAccessor($reflection->name, $property, null, $setter);
+            }
+        } else {
+            $writter = static::getPropertyAccessor($reflection, $property);
+        }
+
+        return new DelegateAccessor($reader, $writter);
+    }
+
+    /**
+     * Guess which property accessor suit the property
+     *
+     * @param ReflectionClass $reflection
+     * @param string $property
+     *
+     * @return PropertyAccessorInterface
+     *
+     * @throws \ReflectionException
+     */
+    public static function getPropertyAccessor(ReflectionClass $reflection, string $property): PropertyAccessorInterface
     {
         $reflection = self::getPropertyOwner($reflection, $property);
 
         // use reflection accessor if not set. Guess if property is public to use tue public accessor
-        if ($options === null) {
-            if ($reflection->getProperty($property)->isPublic()) {
-                return new PublicAccessor($reflection->name, $property);
-            }
-
-            if (self::$useClosure) {
-                return new ClosureAccessor($reflection->name, $property);
-            }
-
-            return new ReflectionAccessor($reflection->name, $property);
+        if ($reflection->getProperty($property)->isPublic()) {
+            return new PublicAccessor($reflection->name, $property);
         }
 
-        // If accessor is an array, it should have reader and writer keys.
-        // The reader and the writer are methods, the method accessor will be used
-        // Otherwise, the delegate accessor will be built with defined accessors.
-        if (isset($options['reader']) && is_string($options['reader']) &&
-            isset($options['writer']) && is_string($options['writer'])) {
-            return new MethodAccessor($reflection->name, $property, $options['reader'], $options['writer']);
+        if (self::$useClosure) {
+            return new ClosureAccessor($reflection->name, $property);
         }
 
-        if (isset($options['reader'])) {
-            if ($options['reader'] instanceof PropertyAccessorInterface) {
-                $reader = $options['reader'];
-            } else {
-                $reader = new MethodAccessor($reflection->name, $property, $options['reader']);
-            }
-        } else {
-            $reader = static::guessAccessor($reflection, $property);
-        }
-
-        if (isset($options['writer'])) {
-            if ($options['writer'] instanceof PropertyAccessorInterface) {
-                $writter = $options['writer'];
-            } else {
-                $writter = new MethodAccessor($reflection->name, $property, null, $options['writer']);
-            }
-        } else {
-            $writter = static::guessAccessor($reflection, $property);
-        }
-
-        return new DelegateAccessor($reader, $writter);
+        return new ReflectionAccessor($reflection->name, $property);
     }
 
     /**
@@ -89,13 +125,15 @@ class AccessorGuesser
      *
      * @todo Manage magic method __set
      */
-    public static function guessSetter(string $class, string $property)
+    public static function guessSetter(string $class, string $property): ?string
     {
         $method = 'set'.ucfirst($property);
 
         if (method_exists($class, $method)) {
             return $method;
         }
+
+        return null;
     }
 
     /**
@@ -108,7 +146,7 @@ class AccessorGuesser
      *
      * @todo Manage magic method __get
      */
-    public static function guessGetter(string $class, string $property)
+    public static function guessGetter(string $class, string $property): ?string
     {
         if (method_exists($class, $property)) {
             return $property;
@@ -119,6 +157,8 @@ class AccessorGuesser
         if (method_exists($class, $method)) {
             return $method;
         }
+
+        return null;
     }
 
     /**

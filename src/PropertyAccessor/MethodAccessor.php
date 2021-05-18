@@ -2,7 +2,6 @@
 
 namespace Bdf\Serializer\PropertyAccessor;
 
-use Bdf\Serializer\Util\AccessorGuesser;
 use InvalidArgumentException;
 
 /**
@@ -36,16 +35,16 @@ class MethodAccessor implements PropertyAccessorInterface
     /**
      * Constructor
      *
-     * @param string $entityClass
+     * @param string $class
      * @param string $property
-     * @param string $getter
-     * @param string $setter
+     * @param string|null $getter  Set to false to desactivate
+     * @param string|null $setter  Set to false to desactivate
      */
-    public function __construct($class, $property, $getter = null, $setter = null)
+    public function __construct(string $class, string $property, string $getter = null, string $setter = null)
     {
         $this->property = $property;
-        $this->getter = $getter ?: AccessorGuesser::guessGetter($class, $property);
-        $this->setter = $setter ?: AccessorGuesser::guessSetter($class, $property);
+        $this->getter = $getter;
+        $this->setter = $setter;
     }
 
     /**
@@ -53,7 +52,7 @@ class MethodAccessor implements PropertyAccessorInterface
      */
     public function write($object, $value)
     {
-        if ($this->setter === null) {
+        if (!$this->setter) {
             throw new InvalidArgumentException('Could not find setter method for "'.$this->property.'"');
         }
 
@@ -65,7 +64,7 @@ class MethodAccessor implements PropertyAccessorInterface
      */
     public function read($object)
     {
-        if ($this->getter === null) {
+        if (!$this->getter) {
             throw new InvalidArgumentException('Could not find getter method for "'.$this->property.'"');
         }
 

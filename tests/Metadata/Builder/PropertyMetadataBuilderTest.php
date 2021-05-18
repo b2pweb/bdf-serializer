@@ -336,6 +336,20 @@ class PropertyMetadataBuilderTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function test_virtual()
+    {
+        $builder = $this->propertyBuilder(User::class);
+        $builder->virtual('virtualName');
+
+        $metadata = $builder->build();
+
+        $this->assertTrue($metadata->readOnly);
+        $this->assertSame('foo', $metadata->accessor->read(new User()));
+    }
+
+    /**
      * @param string $class
      * @param string $property
      *
@@ -364,6 +378,11 @@ class User
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function virtualName()
+    {
+        return 'foo';
     }
 }
 class UserWithDefaultValues
