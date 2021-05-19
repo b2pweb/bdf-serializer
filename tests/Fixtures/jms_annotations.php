@@ -35,7 +35,13 @@ class AbstractUser
 
 class User extends AbstractUser
 {
+    static private $singleton;
     protected $name;
+
+    /**
+     * @Serializer\Type("array<int>")
+     */
+    protected $roles;
 
     /**
      * @Serializer\Type(Customer::class)
@@ -66,4 +72,9 @@ class Address
      * @var string
      */
     protected $city;
+}
+
+class NoAnnotation
+{
+    public $id;
 }
