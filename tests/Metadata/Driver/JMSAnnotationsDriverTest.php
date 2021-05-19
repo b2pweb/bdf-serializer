@@ -3,36 +3,37 @@
 namespace Bdf\Serializer\Metadata\Driver;
 
 use Bdf\Serializer\Metadata\ClassMetadata;
-use Bdf\Serializer\Metadata\Driver\Bdf\Customer;
-use Bdf\Serializer\Metadata\Driver\Bdf\User;
+use Bdf\Serializer\Metadata\Driver\JMS\Customer;
+use Bdf\Serializer\Metadata\Driver\JMS\User;
 use Bdf\Serializer\Type\Type;
 use DateTime;
+use Doctrine\Common\Annotations\AnnotationReader;
+use JMS\Serializer\Metadata\Driver\AnnotationDriver as BaseJMSAnnotationDriver;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Test\Bdf\Serializer\Loader\Driver\Bdf\Address as MyTestAddress;
-
+use Test\Bdf\Serializer\Loader\Driver\JMS\Address as MyTestAddress;
 
 /**
  *
  */
-class AnnotationsDriverTest extends TestCase
+class JMSAnnotationsDriverTest extends TestCase
 {
     public function setUp(): void
     {
         parent::setUp();
 
-        include_once __DIR__.'/../../Fixtures/bdf_annotations.php';
+        include_once __DIR__.'/../../Fixtures/jms_annotations.php';
     }
-
     /**
      * @group test
      */
     public function test_load_annotations()
     {
-        $driver = new AnnotationsDriver();
+        $annotation = new BaseJMSAnnotationDriver(new AnnotationReader(), new IdenticalPropertyNamingStrategy());
+        $driver = new JMSAnnotationDriver($annotation);
 
-        $reflection = new ReflectionClass(User::class);
-        $metadata = $driver->getMetadataForClass($reflection);
+        $metadata = $driver->getMetadataForClass(new ReflectionClass(User::class));
 
         $this->assertInstanceOf(ClassMetadata::class, $metadata);
         $this->assertEquals(User::class, $metadata->name());
