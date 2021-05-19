@@ -22,7 +22,7 @@
   "require-dev": {
     "phpunit/phpunit": "~7.0|~8.0",
     "jeremeamia/superclosure": "^2.3",
-    "jms/serializer": "^3.0"
+    "jms/serializer": "~2.0|^3.0"
   },
   "suggest": {
     "symfony/cache": "Required to use default cache if string path is given to builder (~4.3)",
