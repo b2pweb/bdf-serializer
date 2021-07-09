@@ -32,6 +32,8 @@ class TypeFactory
         Type::BOOLEAN     => true,
         Type::TNULL       => true,
         Type::TARRAY      => true,
+        'int'             => true,
+        'bool'            => true,
     ];
 
     /**

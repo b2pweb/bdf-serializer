@@ -321,3 +321,26 @@ class ObjectWithAccesors
             ->writeWith('setFormattedData');
     }
 }
+
+class ObjectWithShortcutType
+{
+    private $age;
+
+    public function __construct(int $age = null)
+    {
+        $this->age = $age;
+    }
+
+    public function age(): ?int
+    {
+        return $this->age;
+    }
+
+    /**
+     * @param ClassMetadataBuilder $metadata
+     */
+    public static function loadSerializerMetadata($metadata)
+    {
+        $metadata->add('age', 'int');
+    }
+}

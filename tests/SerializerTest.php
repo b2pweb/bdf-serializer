@@ -604,4 +604,18 @@ class SerializerTest extends TestCase
         $object = $serializer->fromJson('{"data":"formatted-foo"}', ObjectWithAccesors::class);
         $this->assertSame('foo', $object->data());
     }
+
+    /**
+     *
+     */
+    public function test_shortcut_type()
+    {
+        $serializer = SerializerBuilder::create()->build();
+        $object = new ObjectWithShortcutType(12);
+
+        $this->assertSame('{"age":12}', $serializer->toJson($object));
+
+        $object = $serializer->fromJson('{"age":12}', ObjectWithShortcutType::class);
+        $this->assertSame(12, $object->age());
+    }
 }

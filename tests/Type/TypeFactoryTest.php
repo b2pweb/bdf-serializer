@@ -17,10 +17,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType(Type::STRING);
 
-        $this->assertEquals(Type::STRING, $type->name());
-        $this->assertEquals(false, $type->isArray());
-        $this->assertEquals(null, $type->subType());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::STRING, $type->name());
+        $this->assertSame(false, $type->isArray());
+        $this->assertSame(null, $type->subType());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -30,10 +30,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType('string[]');
 
-        $this->assertEquals(Type::TARRAY, $type->name());
-        $this->assertEquals(true, $type->isArray());
-        $this->assertEquals(Type::STRING, $type->subType()->name());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::TARRAY, $type->name());
+        $this->assertSame(true, $type->isArray());
+        $this->assertSame(Type::STRING, $type->subType()->name());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -43,10 +43,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType('Customer');
 
-        $this->assertEquals('Customer', $type->name());
-        $this->assertEquals(false, $type->isArray());
-        $this->assertEquals(null, $type->subType());
-        $this->assertEquals(false, $type->isBuildin());
+        $this->assertSame('Customer', $type->name());
+        $this->assertSame(false, $type->isArray());
+        $this->assertSame(null, $type->subType());
+        $this->assertSame(false, $type->isBuildin());
     }
 
     /**
@@ -56,10 +56,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType('Customer[]');
 
-        $this->assertEquals(Type::TARRAY, $type->name());
-        $this->assertEquals(true, $type->isArray());
-        $this->assertEquals('Customer', $type->subType()->name());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::TARRAY, $type->name());
+        $this->assertSame(true, $type->isArray());
+        $this->assertSame('Customer', $type->subType()->name());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -69,10 +69,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType('mixed');
 
-        $this->assertEquals(Type::MIXED, $type->name());
-        $this->assertEquals(false, $type->isArray());
-        $this->assertEquals(null, $type->subType());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::MIXED, $type->name());
+        $this->assertSame(false, $type->isArray());
+        $this->assertSame(null, $type->subType());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -82,10 +82,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType('mixed[]');
 
-        $this->assertEquals(Type::TARRAY, $type->name());
-        $this->assertEquals(true, $type->isArray());
-        $this->assertEquals(Type::MIXED, $type->subType()->name());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::TARRAY, $type->name());
+        $this->assertSame(true, $type->isArray());
+        $this->assertSame(Type::MIXED, $type->subType()->name());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -95,10 +95,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType(Type::TARRAY);
 
-        $this->assertEquals(Type::TARRAY, $type->name());
-        $this->assertEquals(true, $type->isArray());
-        $this->assertEquals(Type::MIXED, $type->subType()->name());
-        $this->assertEquals(true, $type->isBuildin());
+        $this->assertSame(Type::TARRAY, $type->name());
+        $this->assertSame(true, $type->isArray());
+        $this->assertSame(Type::MIXED, $type->subType()->name());
+        $this->assertSame(true, $type->isBuildin());
     }
 
     /**
@@ -108,10 +108,10 @@ class TypeFactoryTest extends TestCase
     {
         $type = TypeFactory::createType(\stdClass::class);
 
-        $this->assertEquals(\stdClass::class, $type->name());
-        $this->assertEquals(false, $type->isArray());
-        $this->assertEquals(null, $type->subType());
-        $this->assertEquals(false, $type->isBuildin());
+        $this->assertSame(\stdClass::class, $type->name());
+        $this->assertSame(false, $type->isArray());
+        $this->assertSame(null, $type->subType());
+        $this->assertSame(false, $type->isBuildin());
     }
 
     /**
@@ -119,8 +119,8 @@ class TypeFactoryTest extends TestCase
      */
     public function test_from_value()
     {
-        $this->assertEquals(\stdClass::class, TypeFactory::fromValue(new \stdClass())->name());
-        $this->assertEquals(Type::TNULL, TypeFactory::fromValue(null)->name());
+        $this->assertSame(\stdClass::class, TypeFactory::fromValue(new \stdClass())->name());
+        $this->assertSame(Type::TNULL, TypeFactory::fromValue(null)->name());
     }
 
     /**
@@ -132,8 +132,8 @@ class TypeFactoryTest extends TestCase
 
         $this->assertTrue($type->isParametrized());
         $this->assertFalse($type->isArray());
-        $this->assertEquals('MyType', $type->name());
-        $this->assertEquals('SubType', $type->subType()->name());
+        $this->assertSame('MyType', $type->name());
+        $this->assertSame('SubType', $type->subType()->name());
     }
 
     /**
@@ -144,11 +144,25 @@ class TypeFactoryTest extends TestCase
         $type = TypeFactory::createType('Wrapper<MyType<SubType>>[]');
 
         $this->assertTrue($type->isArray());
-        $this->assertEquals('Wrapper', $type->subType()->name());
+        $this->assertSame('Wrapper', $type->subType()->name());
         $this->assertFalse($type->subType()->isArray());
-        $this->assertEquals('MyType', $type->subType()->subType()->name());
+        $this->assertSame('MyType', $type->subType()->subType()->name());
         $this->assertFalse($type->subType()->subType()->isArray());
-        $this->assertEquals('SubType', $type->subType()->subType()->subType()->name());
+        $this->assertSame('SubType', $type->subType()->subType()->subType()->name());
         $this->assertFalse($type->subType()->subType()->subType()->isArray());
+    }
+
+    /**
+     *
+     */
+    public function test_int_type()
+    {
+        $type = TypeFactory::createType('int');
+
+        // NOTE should we map to integer ?
+        $this->assertEquals('int', $type->name());
+        $this->assertEquals(false, $type->isArray());
+        $this->assertEquals(null, $type->subType());
+        $this->assertEquals(true, $type->isBuildin());
     }
 }
