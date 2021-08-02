@@ -41,7 +41,7 @@ class PublicAccessorTest extends TestCase
      */
     public function test_empty_extraction()
     {
-        $object = new stdClass();
+        $object = (object)['property' => null];
 
         $hydrator = new PublicAccessor('', 'property');
 

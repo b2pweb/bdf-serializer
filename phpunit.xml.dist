@@ -18,7 +18,8 @@
 
     <testsuites>
         <testsuite name="All Test Suite">
-            <directory suffix="Test.php">tests</directory>
+            <directory suffix="Test.php">tests/Test</directory>
+            <directory phpVersion="7.4" phpVersionOperator=">=">./tests/TestPhp74</directory>
         </testsuite>
     </testsuites>
     <filter>

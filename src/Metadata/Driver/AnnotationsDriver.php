@@ -131,13 +131,17 @@ class AnnotationsDriver implements DriverInterface
      */
     private function getPropertyAnnotations(ReflectionProperty $property): array
     {
+        $annotations = [];
+
+        if (PHP_VERSION_ID >= 70400 && $property->hasType()) {
+            $annotations['type'] = $this->findType($property->getType()->getName(), $property);
+        }
+
         try {
             $docBlock = $this->docBlockFactory->create($property, $this->contextFactory->createFromReflector($property));
         } catch (\InvalidArgumentException $e) {
-            return [];
+            return $annotations;
         }
-
-        $annotations = [];
 
         // Tags mapping
         foreach ($docBlock->getTags() as $tag) {

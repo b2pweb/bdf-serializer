@@ -6,6 +6,7 @@ use Bdf\Serializer\Context\DenormalizationContext;
 use Bdf\Serializer\Context\NormalizationContext;
 use Bdf\Serializer\Exception\UnexpectedValueException;
 use Bdf\Serializer\Metadata\MetadataFactoryInterface;
+use Bdf\Serializer\PropertyAccessor\Exception\AccessorException;
 use Bdf\Serializer\Type\Type;
 use Doctrine\Instantiator\Exception\ExceptionInterface;
 use Doctrine\Instantiator\Instantiator;
@@ -62,7 +63,15 @@ class PropertyNormalizer implements NormalizerInterface
                 continue;
             }
 
-            $value = $propertyContext->root()->normalize($property->accessor->read($object), $propertyContext);
+            try {
+                $value = $propertyContext->root()->normalize($property->accessor->read($object), $propertyContext);
+            } catch (AccessorException $exception) {
+                if ($propertyContext->throwsOnAccessorError()) {
+                    throw $exception;
+                }
+
+                continue;
+            }
 
             if ($propertyContext->skipPropertyValue($property, $value)) {
                 continue;
@@ -110,13 +119,21 @@ class PropertyNormalizer implements NormalizerInterface
                 }
             }
 
-            $property->accessor->write(
-                $object,
-                $propertyContext->root()->denormalize($propertyData, $property->type, $propertyContext)
-            );
+            try {
+                $property->accessor->write(
+                    $object,
+                    $propertyContext->root()->denormalize($propertyData, $property->type, $propertyContext)
+                );
+            } catch (AccessorException $exception) {
+                if ($propertyContext->throwsOnAccessorError()) {
+                    throw $exception;
+                }
 
-            // memory leaks
-            $property->type->setTarget(null);
+                continue;
+            } finally {
+                // memory leaks
+                $property->type->setTarget(null);
+            }
         }
 
         $metadata->postDenormalization($object);
@@ -154,7 +171,7 @@ class PropertyNormalizer implements NormalizerInterface
         try {
             return $this->instantiator->instantiate($type->name());
         } catch (ExceptionInterface $e) {
-            throw new UnexpectedValueException("Could not instanciate object '".$type->name()."'", 0, $e);
+            throw new UnexpectedValueException("Could not instantiate object '".$type->name()."'", 0, $e);
         }
     }
 }
