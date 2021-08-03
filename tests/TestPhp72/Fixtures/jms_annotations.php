@@ -1,9 +1,9 @@
 <?php
 
-namespace Bdf\Serializer\Metadata\Driver\JMS;
+namespace Bdf\Serializer\TestPhp72\Metadata\Driver\JMS;
 
 use JMS\Serializer\Annotation as Serializer;
-use Test\Bdf\Serializer\Loader\Driver\JMS\Address as MyTestAddress;
+use TestPhp72\Bdf\Serializer\Loader\Driver\JMS\Address as MyTestAddress;
 use DateTime;
 
 class AbstractUser
@@ -62,7 +62,7 @@ class Customer
 }
 
 
-namespace Test\Bdf\Serializer\Loader\Driver\JMS;
+namespace TestPhp72\Bdf\Serializer\Loader\Driver\JMS;
 
 class Address
 {

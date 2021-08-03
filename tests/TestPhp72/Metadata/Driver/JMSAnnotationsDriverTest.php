@@ -1,10 +1,11 @@
 <?php
 
-namespace Bdf\Serializer\Metadata\Driver;
+namespace Bdf\Serializer\TestPhp72\Metadata\Driver;
 
 use Bdf\Serializer\Metadata\ClassMetadata;
-use Bdf\Serializer\Metadata\Driver\JMS\Customer;
-use Bdf\Serializer\Metadata\Driver\JMS\User;
+use Bdf\Serializer\Metadata\Driver\JMSAnnotationDriver;
+use Bdf\Serializer\TestPhp72\Metadata\Driver\JMS\Customer;
+use Bdf\Serializer\TestPhp72\Metadata\Driver\JMS\User;
 use Bdf\Serializer\Type\Type;
 use DateTime;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -12,8 +13,8 @@ use JMS\Serializer\Metadata\Driver\AnnotationDriver as BaseJMSAnnotationDriver;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Test\Bdf\Serializer\Loader\Driver\JMS\Address as MyTestAddress;
-use Test\Bdf\Serializer\Loader\Driver\JMS\NoAnnotation;
+use TestPhp72\Bdf\Serializer\Loader\Driver\JMS\Address as MyTestAddress;
+use TestPhp72\Bdf\Serializer\Loader\Driver\JMS\NoAnnotation;
 
 /**
  *

@@ -7,7 +7,8 @@ use Bdf\Serializer\PropertyAccessor\Exception\AccessorException;
 /**
  * TypedReflectionAccessor
  *
- * Use php 7.4 reflection to access object property
+ * Support of php 7.4 typed property: raised a exception when property is undefined.
+ * Allows the normalizer to skip those properties and having the same behavior than json_encode.
  */
 class TypedPropertyAccessor implements PropertyAccessorInterface
 {
