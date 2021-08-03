@@ -30,7 +30,8 @@
     "jms/serializer": "Required to use JMS metadata (^3.0)"
   },
   "scripts": {
-    "tests": "phpunit"
+    "tests": "phpunit",
+    "tests-with-coverage": "phpunit --coverage-clover coverage.xml"
   },
   "extra": {
     "branch-alias": {
