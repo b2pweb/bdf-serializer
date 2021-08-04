@@ -8,12 +8,12 @@ use Bdf\Serializer\PropertyAccessor\Exception\AccessorException;
  * TypedReflectionAccessor
  *
  * Support of php 7.4 typed property: raised a exception when property is undefined.
- * Allows the normalizer to skip those properties and having the same behavior than json_encode.
+ * Allows the normalizer to skip those properties and having the same behavior as json_encode.
  */
 class TypedPropertyAccessor implements PropertyAccessorInterface
 {
     /**
-     * The class name
+     * The inner accessor
      *
      * @var PropertyAccessorInterface
      */
@@ -27,7 +27,7 @@ class TypedPropertyAccessor implements PropertyAccessorInterface
     private $class;
 
     /**
-     * Property name
+     * The property name
      *
      * @var string
      */

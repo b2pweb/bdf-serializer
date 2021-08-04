@@ -111,11 +111,15 @@ class PropertyNormalizer implements NormalizerInterface
             // If type is an object we should try to inject
             // the new value into the object of the owner object
             if (!$property->type->isBuildin()) {
-                $current = $property->accessor->read($object);
+                try {
+                    $current = $property->accessor->read($object);
 
-                // if current is an object we put it on the queue of targets
-                if (is_object($current)) {
-                    $property->type->setTarget($current);
+                    // if current is an object we put it on the queue of targets
+                    if (is_object($current)) {
+                        $property->type->setTarget($current);
+                    }
+                } catch (AccessorException $exception) {
+                    // Silent mode: if value is undefined we let the next denormalize create the object
                 }
             }
 

@@ -12,6 +12,13 @@ use PHPUnit\Framework\TestCase;
  */
 class SerializerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        include_once __DIR__.'/Fixtures/entities.php';
+    }
+
     /**
      * @dataProvider getEntityClasses
      */
@@ -98,48 +105,20 @@ class SerializerTest extends TestCase
 
         $serializer->fromArray($data, PrivateAttribute::class, [NormalizationContext::THROWS_ON_ACCESSOR_ERROR => true]);
     }
-}
 
-class PrivateAttribute
-{
-    private int $id;
-    private string $firstName;
-    private string $lastName;
-    private ?int $age;
+    /**
+     *
+     */
+    public function test_denormalize_undefined_embeded_property()
+    {
+        $serializer = SerializerBuilder::create()->build();
+        $data = [
+            'bar' => ['label' => 'cow'],
+        ];
 
-    public function __construct(int $id, string $firstName)
-    {
-        $this->id = $id;
-        $this->firstName = $firstName;
-    }
-    public function setAge(?int $age)
-    {
-        $this->age = $age;
-    }
-    public function setLastName(string $lastName)
-    {
-        $this->lastName = $lastName;
-    }
-}
+        /** @var Foo $foo */
+        $foo = $serializer->fromArray($data, Foo::class);
 
-class PublicAttribute
-{
-    public int $id;
-    public string $firstName;
-    private string $lastName;
-    public ?int $age;
-
-    public function __construct(int $id, string $firstName)
-    {
-        $this->id = $id;
-        $this->firstName = $firstName;
-    }
-    public function setAge(?int $age)
-    {
-        $this->age = $age;
-    }
-    public function setLastName(string $lastName)
-    {
-        $this->lastName = $lastName;
+        $this->assertSame('cow', $foo->bar->label);
     }
 }
