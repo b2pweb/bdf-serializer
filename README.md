@@ -92,7 +92,7 @@ Supported tags
 * `until`: Enable object versionning. The value specify until which version this property was available.
 * `SerializeIgnore`: Don't serialize this property.
 
-NOTE: If type has not been detected we try to add the typed property value added in PHP 7.4
+NOTE: If type has not been detected in the phpdoc we try to add the typed property value added in PHP 7.4
 
 
 #### JMS/serializer driver
