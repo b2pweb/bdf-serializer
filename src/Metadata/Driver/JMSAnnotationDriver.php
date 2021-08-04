@@ -12,6 +12,8 @@ use ReflectionClass;
 
 /**
  * The annotation driver use JMS annotation
+ *
+ * Works only with php 7.2
  */
 class JMSAnnotationDriver implements DriverInterface
 {

@@ -3,6 +3,7 @@
 namespace Bdf\Serializer\Context;
 
 use Bdf\Serializer\Metadata\PropertyMetadata;
+use Bdf\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * DenormalizationContext
@@ -13,6 +14,29 @@ class DenormalizationContext extends Context
     const DATETIME_FORMAT = 'dateFormat';
     const TIMEZONE = 'dateTimezone';
     const TIMEZONE_HINT = 'timezoneHint';
+    const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
+
+    /**
+     * The default options of this context
+     *
+     * @var array
+     */
+    private $defaultOptions = [
+        /**
+         * Throws exception if accessor has error
+         *
+         * @var boolean
+         */
+        self::THROWS_ON_ACCESSOR_ERROR => false,
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(NormalizerInterface $normalizer, array $options = [])
+    {
+        parent::__construct($normalizer, $options + $this->defaultOptions);
+    }
 
     /**
      * {@inheritdoc}
@@ -32,5 +56,15 @@ class DenormalizationContext extends Context
     public function skipProperty(PropertyMetadata $property): bool
     {
         return $property->readOnly;
+    }
+
+    /**
+     * Should add metadata of type into the serialization
+     *
+     * @return bool
+     */
+    public function throwsOnAccessorError(): bool
+    {
+        return $this->options[self::THROWS_ON_ACCESSOR_ERROR];
     }
 }

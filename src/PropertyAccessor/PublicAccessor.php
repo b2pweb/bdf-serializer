@@ -40,6 +40,6 @@ class PublicAccessor implements PropertyAccessorInterface
      */
     public function read($object)
     {
-        return isset($object->{$this->property}) ? $object->{$this->property} : null;
+        return $object->{$this->property};
     }
 }

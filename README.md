@@ -92,6 +92,35 @@ Supported tags
 * `until`: Enable object versionning. The value specify until which version this property was available.
 * `SerializeIgnore`: Don't serialize this property.
 
+NOTE: If type has not been detected in the phpdoc we try to add the typed property value added in PHP 7.4
+
+
+#### JMS/serializer driver
+
+The driver `Bdf\Serializer\Metadata\Driver\JMSAnnotationDriver` allows you to use JMS drivers. 
+The JMS metadata will be used to create Bdf metadata. Only few options of the serializer is used:
+* `serializedName`
+* `readOnly`
+* `inline`
+* `sinceVersion`
+* `untilVersion`
+* `getter`
+* `setter`
+* `groups`
+* `type`
+
+NOTE: The driver works with jms/serializer > v3.0 and php > v7.2
+
+```PHP
+<?php
+
+use Bdf\Serializer\Metadata\Driver\JMSAnnotationDriver;
+use JMS\Serializer\Metadata\Driver\AnnotationDriver as BaseJMSAnnotationDriver;
+
+$driver = new JMSAnnotationDriver(new BaseJMSAnnotationDriver(...));
+```
+
+
 #### Serialization options
 
 The `NormalizationContext` contains options for normalization.
@@ -109,6 +138,10 @@ Date time options
 * `dateFormat`: Normalization option to specify the format.
 * `dateTimezone`: Use the given timezone to format date.
 * `timezoneHint`: Denormalization option to help to detect the timezone from input string.
+
+Available option for `NormalizationContext` and `DenormalizationContext`.
+
+* `throws_on_accessor_error`: By default a value is skipped if an `Error` is thrown when writting or reading on a property. This option will throw error from accessor (debug purpose).
 
 Exemple:
 ```PHP

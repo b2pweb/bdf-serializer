@@ -132,20 +132,25 @@ class AnnotationsDriver implements DriverInterface
     private function getPropertyAnnotations(ReflectionProperty $property): array
     {
         try {
-            $docBlock = $this->docBlockFactory->create($property, $this->contextFactory->createFromReflector($property));
+            $tags = $this->docBlockFactory->create($property, $this->contextFactory->createFromReflector($property))->getTags();
         } catch (\InvalidArgumentException $e) {
-            return [];
+            $tags = [];
         }
 
         $annotations = [];
 
         // Tags mapping
-        foreach ($docBlock->getTags() as $tag) {
+        foreach ($tags as $tag) {
             list($option, $value) = $this->createSerializationTag($tag, $property);
 
             if ($option !== null && !isset($annotations[$option])) {
                 $annotations[$option] = $value;
             }
+        }
+
+        // Adding php type if no precision has been added with annotation
+        if (PHP_VERSION_ID >= 70400 && $property->hasType() && !isset($annotations['type'])) {
+            $annotations['type'] = $this->findType($property->getType()->getName(), $property);
         }
 
         return $annotations;

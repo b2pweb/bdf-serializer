@@ -22,7 +22,7 @@
   "require-dev": {
     "phpunit/phpunit": "~7.0|~8.0",
     "jeremeamia/superclosure": "^2.3",
-    "jms/serializer": "^3.0"
+    "jms/serializer": "^1.0|^3.0"
   },
   "suggest": {
     "symfony/cache": "Required to use default cache if string path is given to builder (~4.3)",
@@ -30,7 +30,8 @@
     "jms/serializer": "Required to use JMS metadata (^3.0)"
   },
   "scripts": {
-    "tests": "phpunit"
+    "tests": "phpunit",
+    "tests-with-coverage": "phpunit --coverage-clover coverage.xml"
   },
   "extra": {
     "branch-alias": {

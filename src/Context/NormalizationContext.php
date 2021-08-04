@@ -24,6 +24,7 @@ class NormalizationContext extends Context
     const TIMEZONE = 'dateTimezone';
     const CIRCULAR_REFERENCE_LIMIT = 'circular_reference_limit';
     const REMOVE_DEFAULT_VALUE = 'remove_default_value';
+    const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
 
     /**
      * The default options of this context
@@ -79,6 +80,12 @@ class NormalizationContext extends Context
          * @var boolean
          */
         self::REMOVE_DEFAULT_VALUE => false,
+        /**
+         * Throws exception if accessor has error
+         *
+         * @var boolean
+         */
+        self::THROWS_ON_ACCESSOR_ERROR => false,
     ];
 
     /**
@@ -166,6 +173,16 @@ class NormalizationContext extends Context
     public function includeMetaType(): bool
     {
         return $this->options[self::META_TYPE];
+    }
+
+    /**
+     * Should add metadata of type into the serialization
+     *
+     * @return bool
+     */
+    public function throwsOnAccessorError(): bool
+    {
+        return $this->options[self::THROWS_ON_ACCESSOR_ERROR];
     }
 
     /**
