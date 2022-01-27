@@ -15,7 +15,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.1",
-    "doctrine/instantiator": ">1.0.3",
+    "doctrine/instantiator": "^1.0.3",
     "phpdocumentor/reflection-docblock": "^4.0|~5.0",
     "psr/simple-cache": "^1.0"
   },
