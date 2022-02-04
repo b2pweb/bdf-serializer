@@ -7,6 +7,7 @@ It use doctrine/instantiator for instancing class and phpdocumentor for reading 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/b2pweb/bdf-serializer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/b2pweb/bdf-serializer/?branch=master)
 [![Packagist Version](https://img.shields.io/packagist/v/b2pweb/bdf-serializer.svg)](https://packagist.org/packages/b2pweb/bdf-serializer)
 [![Total Downloads](https://img.shields.io/packagist/dt/b2pweb/bdf-serializer.svg)](https://packagist.org/packages/b2pweb/bdf-serializer)
+[![Type Coverage](https://shepherd.dev/github/b2pweb/bdf-serializer/coverage.svg)](https://shepherd.dev/github/b2pweb/bdf-serializer)
 
 ### Installation with Composer
 
