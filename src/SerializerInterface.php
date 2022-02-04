@@ -14,27 +14,29 @@ interface SerializerInterface
      * @param string              $format
      * @param array               $context
      *
-     * @return string
+     * @return string|array
      */
     public function serialize($data, $format, array $context = []);
 
     /**
      * Deserializes the given data to the specified type.
      *
-     * @param mixed                $data
-     * @param string|object        $type  The type of data. Can be the target object.
-     * @param string               $format
-     * @param array                $context
+     * @param mixed $data
+     * @param class-string<T>|T $type  The type of data. Can be the target object.
+     * @param string $format
+     * @param array $context
      *
-     * @return object|array|mixed
+     * @return T|T[]
+     *
+     * @template T
      */
     public function deserialize($data, $type, $format, array $context = []);
 
     /**
      * Serialize data to json
      *
-     * @param mixed  $data
-     * @param array  $context
+     * @param mixed $data
+     * @param array $context
      *
      * @return string
      */
@@ -43,11 +45,13 @@ interface SerializerInterface
     /**
      * Restores objects from json.
      *
-     * @param string         $json
-     * @param string|object  $type  The type of data. Can be the target object.
-     * @param array          $context
+     * @param string $json
+     * @param class-string<T>|T  $type  The type of data. Can be the target object.
+     * @param array $context
      *
-     * @return mixed this returns whatever the passed type is, typically an object or an array of objects
+     * @return T|T[] this returns whatever the passed type is, typically an object or an array of objects
+     *
+     * @template T
      */
     public function fromJson(string $json, $type, array $context = []);
 
@@ -66,11 +70,13 @@ interface SerializerInterface
     /**
      * Restores objects from an array structure.
      *
-     * @param array          $data
-     * @param string|object  $type  The type of data. Can be the target object.
-     * @param array          $context
+     * @param array $data
+     * @param class-string<T>|T $type  The type of data. Can be the target object.
+     * @param array $context
      *
-     * @return mixed this returns whatever the passed type is, typically an object or an array of objects
+     * @return T|T[] this returns whatever the passed type is, typically an object or an array of objects
+     *
+     * @template T
      */
     public function fromArray(array $data, $type, array $context = []);
 }

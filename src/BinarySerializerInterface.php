@@ -19,7 +19,7 @@ interface BinarySerializerInterface
     /**
      * Serialize data to binary
      *
-     * @param mixed  $data
+     * @param mixed $data
      * @param array $context
      *
      * @return string
@@ -29,10 +29,12 @@ interface BinarySerializerInterface
     /**
      * Restores objects from binary.
      *
-     * @param string         $raw
-     * @param string|object  $type  The type of data. Can be the target object.
+     * @param string $raw
+     * @param class-string<T>|T $type  The type of data. Can be the target object.
      *
-     * @return mixed this returns whatever the passed type is, typically an object or an array of objects
+     * @return T|T[] this returns whatever the passed type is, typically an object or an array of objects
+     *
+     * @template T
      */
     public function fromBinary(string $raw, $type);
 }

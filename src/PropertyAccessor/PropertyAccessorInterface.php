@@ -12,6 +12,8 @@ interface PropertyAccessorInterface
      *
      * @param object $object
      * @param mixed  $value
+     *
+     * @return void
      */
     public function write($object, $value);
 

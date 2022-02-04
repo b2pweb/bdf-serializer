@@ -35,14 +35,14 @@ class PropertyMetadataBuilder
     /**
      * The property alias
      *
-     * @var string
+     * @var string|null
      */
     private $alias;
 
     /**
      * The property type
      *
-     * @var string
+     * @var string|null
      */
     private $type;
 
@@ -56,35 +56,35 @@ class PropertyMetadataBuilder
     /**
      * The property accessor
      *
-     * @var PropertyAccessorInterface|array
+     * @var PropertyAccessorInterface|array|null
      */
     private $customAccessor;
 
     /**
      * The getter accessor
      *
-     * @var PropertyAccessorInterface|string
+     * @var PropertyAccessorInterface|string|null
      */
     private $getter;
 
     /**
      * The setter accessor
      *
-     * @var PropertyAccessorInterface|string
+     * @var PropertyAccessorInterface|string|null
      */
     private $setter;
 
     /**
      * The version when the property has been added.
      *
-     * @var string
+     * @var string|null
      */
     private $since;
 
     /**
      * The version when the property has been removed.
      *
-     * @var string
+     * @var string|null
      */
     private $until;
 
@@ -93,14 +93,14 @@ class PropertyMetadataBuilder
      *
      * @var bool
      */
-    private $readOnly;
+    private $readOnly = false;
 
     /**
      * The inline state of the property.
      *
      * @var bool
      */
-    private $inline;
+    private $inline = false;
 
     /**
      * The context options for normalization.
@@ -230,7 +230,7 @@ class PropertyMetadataBuilder
     /**
      * Set the property alias
      *
-     * @param string $alias
+     * @param string|null $alias
      *
      * @return $this
      */
@@ -242,9 +242,9 @@ class PropertyMetadataBuilder
     }
 
     /**
-     * et the property alias
+     * Get the property alias
      *
-     * @return string
+     * @return string|null
      */
     public function getAlias(): ?string
     {
@@ -399,7 +399,7 @@ class PropertyMetadataBuilder
      * Add a normalization option
      *
      * @param string $option
-     * @param string $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -414,7 +414,7 @@ class PropertyMetadataBuilder
      * Add a denormalization option
      *
      * @param string $option
-     * @param string $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -551,7 +551,7 @@ class PropertyMetadataBuilder
     /**
      * Clear all reference
      */
-    private function clear()
+    private function clear(): void
     {
         $this->customAccessor = $this->setter = $this->getter = null;
     }

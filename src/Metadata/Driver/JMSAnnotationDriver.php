@@ -8,6 +8,7 @@ use JMS\Serializer\Metadata\ClassMetadata as JMSClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata as JMSPropertyMetadata;
 use Metadata\ClassMetadata as JMSBaseClassMetadata;
 use Metadata\Driver\DriverInterface as JMSDriverInterface;
+use Metadata\MergeableInterface;
 use ReflectionClass;
 
 /**
@@ -104,7 +105,7 @@ class JMSAnnotationDriver implements DriverInterface
         do {
             $current = $this->driver->loadMetadataForClass($reflection);
 
-            if ($metadata && $current) {
+            if ($metadata instanceof MergeableInterface && $current instanceof MergeableInterface) {
                 $current->merge($metadata);
             }
 
@@ -140,6 +141,7 @@ class JMSAnnotationDriver implements DriverInterface
      * @param JMSBaseClassMetadata|null $jmsMetadata
      *
      * @return bool
+     * @psalm-assert-if-false !null $jmsMetadata
      */
     private function isJmsMetadataEmpty(?JMSBaseClassMetadata $jmsMetadata): bool
     {

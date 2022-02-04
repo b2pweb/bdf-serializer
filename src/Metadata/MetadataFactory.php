@@ -22,7 +22,7 @@ class MetadataFactory implements MetadataFactoryInterface
     /**
      * The cache for metadata
      *
-     * @var CacheInterface
+     * @var CacheInterface|null
      */
     private $cache;
 
@@ -75,9 +75,11 @@ class MetadataFactory implements MetadataFactoryInterface
     /**
      * Create a class metadata for this object
      *
-     * @param string $className
+     * @param class-string<T> $className
      *
-     * @return ClassMetadata
+     * @return ClassMetadata<T>
+     *
+     * @template T as object
      *
      * @throws UnexpectedValueException  if the class name has no metadata
      */
@@ -100,6 +102,7 @@ class MetadataFactory implements MetadataFactoryInterface
         foreach ($this->drivers as $driver) {
             if ($metadata = $driver->getMetadataForClass($reflection)) {
                 if ($this->cache !== null) {
+                    /** @psalm-suppress PossiblyUndefinedVariable */
                     $this->cache->set($cacheId, $metadata);
                 }
                 return $metadata;

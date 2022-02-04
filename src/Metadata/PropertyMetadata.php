@@ -9,6 +9,8 @@ use Bdf\Serializer\Type\Type;
  * PropertyMetadata
  * 
  * @author  Seb
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 class PropertyMetadata
 {
@@ -57,14 +59,14 @@ class PropertyMetadata
     /**
      * The version when the property has been added.
      *
-     * @var string
+     * @var string|null
      */
     public $since;
 
     /**
      * The version when the property has been removed.
      *
-     * @var string
+     * @var string|null
      */
     public $until;
 
@@ -158,7 +160,7 @@ class PropertyMetadata
      *
      * @param Type $type
      */
-    public function setType(Type $type)
+    public function setType(Type $type): void
     {
         $this->type = $type;
     }
@@ -178,7 +180,7 @@ class PropertyMetadata
      *
      * @param string $alias
      */
-    public function setAlias($alias)
+    public function setAlias($alias): void
     {
         $this->alias = $alias;
     }
@@ -198,7 +200,7 @@ class PropertyMetadata
      *
      * @param array $groups
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups): void
     {
         foreach ($groups as $group) {
             $this->groups[$group] = $group;
@@ -220,7 +222,7 @@ class PropertyMetadata
      *
      * @param PropertyAccessorInterface $accessor
      */
-    public function setAccessor(PropertyAccessorInterface $accessor)
+    public function setAccessor(PropertyAccessorInterface $accessor): void
     {
         $this->accessor = $accessor;
     }
@@ -238,9 +240,9 @@ class PropertyMetadata
     /**
      * Set the version when the property has been added
      *
-     * @param string $version
+     * @param string|null $version
      */
-    public function setSince($version)
+    public function setSince($version): void
     {
         $this->since = $version;
     }
@@ -248,7 +250,7 @@ class PropertyMetadata
     /**
      * Get the version when the property has been added
      *
-     * @return string
+     * @return string|null
      */
     public function since()
     {
@@ -258,9 +260,9 @@ class PropertyMetadata
     /**
      * Set the version when the property has been removed
      *
-     * @param string $version
+     * @param string|null $version
      */
-    public function setUntil($version)
+    public function setUntil($version): void
     {
         $this->until = $version;
     }
@@ -268,7 +270,7 @@ class PropertyMetadata
     /**
      * Get the version when the property has been removed
      *
-     * @return string
+     * @return string|null
      */
     public function until()
     {
@@ -300,7 +302,7 @@ class PropertyMetadata
      *
      * @param bool $flag
      */
-    public function setReadOnly($flag)
+    public function setReadOnly($flag): void
     {
         $this->readOnly = $flag;
     }
@@ -324,7 +326,7 @@ class PropertyMetadata
      *
      * @param bool $flag
      */
-    public function setInline(bool $flag)
+    public function setInline(bool $flag): void
     {
         $this->inline = $flag;
     }
@@ -344,7 +346,7 @@ class PropertyMetadata
      *
      * @param mixed $defaultValue
      */
-    public function setDefaultValue($defaultValue)
+    public function setDefaultValue($defaultValue): void
     {
         $this->defaultValue = $defaultValue;
     }
@@ -364,7 +366,7 @@ class PropertyMetadata
      *
      * @param null|array $options
      */
-    public function setNormalizationOptions($options)
+    public function setNormalizationOptions($options): void
     {
         $this->normalizationOptions = $options;
     }
@@ -384,7 +386,7 @@ class PropertyMetadata
      *
      * @param null|array $options
      */
-    public function setDenormalizationOptions($options)
+    public function setDenormalizationOptions($options): void
     {
         $this->denormalizationOptions = $options;
     }

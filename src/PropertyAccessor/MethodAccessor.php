@@ -14,14 +14,14 @@ class MethodAccessor implements PropertyAccessorInterface
     /**
      * The getter method name
      * 
-     * @var string
+     * @var string|null
      */
     private $getter;
 
     /**
      * The setter method name
      *
-     * @var string
+     * @var string|null
      */
     private $setter;
 

@@ -6,13 +6,15 @@ namespace Bdf\Serializer\Metadata;
  * ClassMetadata
  *
  * @author  Seb
+ *
+ * @template T as object
  */
 class ClassMetadata
 {
     /**
      * The class name
      *
-     * @var string
+     * @var class-string<T>
      */
     public $name;
 
@@ -40,7 +42,7 @@ class ClassMetadata
     /**
      * ClassMetadata constructor.
      *
-     * @param string $class
+     * @param class-string<T> $class
      */
     public function __construct(string $class)
     {
@@ -52,7 +54,7 @@ class ClassMetadata
      *
      * @param PropertyMetadata $normalizer
      */
-    public function addProperty(PropertyMetadata $normalizer)
+    public function addProperty(PropertyMetadata $normalizer): void
     {
         $this->properties[$normalizer->name()] = $normalizer;
     }
@@ -91,7 +93,7 @@ class ClassMetadata
     /**
      * Get the class name
      *
-     * @return string
+     * @return class-string<T>
      */
     public function name(): string
     {
@@ -103,7 +105,7 @@ class ClassMetadata
      *
      * @param array $aliases
      */
-    public function setPropertyAliases(array $aliases)
+    public function setPropertyAliases(array $aliases): void
     {
         $this->propertyAliases = $aliases;
     }
@@ -113,7 +115,7 @@ class ClassMetadata
      *
      * @param string $postDenormalization
      */
-    public function setPostDenormalization(?string $postDenormalization)
+    public function setPostDenormalization(?string $postDenormalization): void
     {
         $this->postDenormalization = $postDenormalization;
     }
@@ -123,7 +125,7 @@ class ClassMetadata
      *
      * @param object $object
      */
-    public function postDenormalization($object)
+    public function postDenormalization($object): void
     {
         if ($this->postDenormalization === null) {
             return;

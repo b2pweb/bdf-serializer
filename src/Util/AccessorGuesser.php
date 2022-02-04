@@ -124,7 +124,7 @@ class AccessorGuesser
     /**
      * Try to guess the setter method
      *
-     * @param string $class
+     * @param class-string $class
      * @param string $property
      *
      * @return null|string
@@ -145,7 +145,7 @@ class AccessorGuesser
     /**
      * Try to guess the getter method
      *
-     * @param string $class
+     * @param class-string $class
      * @param string $property
      *
      * @return null|string
@@ -174,7 +174,7 @@ class AccessorGuesser
      */
     public static function useClosureAccessor($flag): void
     {
-        self::$useClosure = (bool)$flag;
+        self::$useClosure = $flag;
     }
 
     /**

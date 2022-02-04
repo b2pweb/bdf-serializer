@@ -16,6 +16,8 @@ use Doctrine\Instantiator\InstantiatorInterface;
  * PropertyNormalizer
  *
  * @author  Seb
+ *
+ * @implements NormalizerInterface<object>
  */
 class PropertyNormalizer implements NormalizerInterface
 {
@@ -29,7 +31,7 @@ class PropertyNormalizer implements NormalizerInterface
     /**
      * The object instantiator
      *
-     * @var InstantiatorInterface
+     * @var InstantiatorInterface|null
      */
     private $instantiator;
 
@@ -37,7 +39,7 @@ class PropertyNormalizer implements NormalizerInterface
      * PropertyNormalizer constructor.
      *
      * @param MetadataFactoryInterface $metadataFactory
-     * @param InstantiatorInterface    $instantiator        The instanciator provider. Should returns InstantiatorInterface.
+     * @param InstantiatorInterface|null $instantiator The instanciator provider. Should returns InstantiatorInterface.
      */
     public function __construct(MetadataFactoryInterface $metadataFactory, InstantiatorInterface $instantiator = null)
     {
@@ -47,13 +49,15 @@ class PropertyNormalizer implements NormalizerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-suppress PossiblyUndefinedVariable
      */
-    public function normalize($object, NormalizationContext $context)
+    public function normalize($data, NormalizationContext $context)
     {
-        $hash = $context->assertNoCircularReference($object);
+        $hash = $context->assertNoCircularReference($data);
 
         $normalized = [];
-        $metadata = $this->metadataFactory->getMetadata($object);
+        $metadata = $this->metadataFactory->getMetadata($data);
 
         // TODO Optimize the loop with the options
         foreach ($metadata->properties as $property) {
@@ -64,7 +68,7 @@ class PropertyNormalizer implements NormalizerInterface
             }
 
             try {
-                $value = $propertyContext->root()->normalize($property->accessor->read($object), $propertyContext);
+                $value = $propertyContext->root()->normalize($property->accessor->read($data), $propertyContext);
             } catch (AccessorException $exception) {
                 if ($propertyContext->throwsOnAccessorError()) {
                     throw $exception;
@@ -156,7 +160,7 @@ class PropertyNormalizer implements NormalizerInterface
     /**
      * Instanciate an object
      *
-     * @param Type $type
+     * @param Type<object> $type
      *
      * @return object
      *

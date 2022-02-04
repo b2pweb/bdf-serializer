@@ -4,6 +4,8 @@ namespace Bdf\Serializer\Type;
 
 /**
  * Type
+ *
+ * @template T
  */
 final class Type
 {
@@ -17,7 +19,7 @@ final class Type
     const MIXED = 'mixed';
 
     /**
-     * @var string
+     * @var class-string<T>|Type::*
      */
     private $name;
 
@@ -32,26 +34,27 @@ final class Type
     private $isArray;
 
     /**
-     * @var Type
+     * @var Type|null
      */
     private $subType;
 
     /**
-     * @var object
+     * @var T|null
      */
     private $target;
 
     /**
      * Type constructor.
      *
-     * @param string $name
+     * @param class-string<T>|Type::* $name
      * @param bool $isBuildin
      * @param bool $isArray
      * @param Type|null $subType
-     * @param null|object $target
+     * @param T|null $target
      */
     public function __construct(string $name, bool $isBuildin, bool $isArray = false, Type $subType = null, $target = null)
     {
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->name = $name;
         $this->isArray = $isArray;
         $this->subType = $subType;
@@ -62,7 +65,7 @@ final class Type
     /**
      * Returns the type name
      *
-     * @return string
+     * @return (T is object ? class-string<T> : Type::*)
      */
     public function name(): string
     {
@@ -93,6 +96,7 @@ final class Type
      * Check if the current type is parametrized (i.e. Has a sub type)
      *
      * @return bool
+     * @psalm-assert-if-true !null $this->subType()
      */
     public function isParametrized(): bool
     {
@@ -112,7 +116,7 @@ final class Type
     /**
      * Get the target object of the type
      *
-     * @return null|object
+     * @return null|T
      */
     public function target()
     {
@@ -122,9 +126,9 @@ final class Type
     /**
      * Set the target
      *
-     * @param object $target
+     * @param T|null $target
      */
-    public function setTarget($target)
+    public function setTarget($target): void
     {
         $this->target = $target;
     }
@@ -147,7 +151,7 @@ final class Type
      *
      * @param mixed &$value in/out parameter for the value. If a metadata type "@type" is found, the real data is set
      *
-     * @return Type The new type corresponding to the given value
+     * @return Type<T> The new type corresponding to the given value
      */
     public function hint(&$value): Type
     {
@@ -187,7 +191,8 @@ final class Type
      *
      * @param mixed $value
      *
-     * @return array|bool|float|int|null|string Native value type
+     * @return T Native value type
+     * @psalm-suppress InvalidReturnStatement
      */
     public function convert($value)
     {

@@ -40,8 +40,11 @@ class TypeFactory
      * Creates a type string.
      *
      * @param string|object $type
+     * @psalm-param class-string<T>|T $type
      *
-     * @return Type
+     * @return (T is object ? Type<T> : Type<mixed>)
+     *
+     * @template T is object|string
      */
     public static function createType($type): Type
     {
@@ -49,7 +52,7 @@ class TypeFactory
         $collection = false;
 
         if (is_object($type)) {
-            return new Type(get_class($type), false, $collection, $collectionType, $type);
+            return new Type(get_class($type), false, false, null, $type);
         }
 
         // Cannot guess
@@ -71,17 +74,22 @@ class TypeFactory
 
         if ($collectionType) {
             $collectionType = self::createType($collectionType);
+        } else {
+            $collectionType = null; // Handle possible empty collection type name
         }
 
+        /** @psalm-suppress ArgumentTypeCoercion */
         return new Type($type, self::isBuildinType($type), $collection, $collectionType);
     }
 
     /**
      * Creates a type from a value.
      *
-     * @param mixed $value
+     * @param T $value
      *
-     * @return Type
+     * @return Type<T>
+     *
+     * @template T
      */
     public static function fromValue($value): Type
     {
@@ -105,7 +113,7 @@ class TypeFactory
     /**
      * Get the mixed type
      *
-     * @return Type
+     * @return Type<mixed>
      */
     static public function mixedType(): Type
     {

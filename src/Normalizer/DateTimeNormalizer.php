@@ -12,6 +12,8 @@ use DateTimeZone;
 
 /**
  * DateTimeNormalizer
+ *
+ * @implements NormalizerInterface<\DateTime|\DateTimeImmutable>
  */
 class DateTimeNormalizer implements NormalizerInterface
 {
@@ -35,28 +37,32 @@ class DateTimeNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize($date, NormalizationContext $context)
+    public function normalize($data, NormalizationContext $context)
     {
         $timezone = $context->option(NormalizationContext::TIMEZONE);
 
         if ($timezone !== null) {
             // Dont change date instance if it is not immutable
-            if (!$date instanceof DateTimeImmutable) {
-                $date = clone $date;
+            if (!$data instanceof DateTimeImmutable) {
+                $data = clone $data;
             }
 
-            $date = $date->setTimezone(new DateTimeZone($timezone));
+            $data = $data->setTimezone(new DateTimeZone($timezone));
         }
 
-        return $date->format($context->option(NormalizationContext::DATETIME_FORMAT, $this->defaultFormat));
+        return $data->format($context->option(NormalizationContext::DATETIME_FORMAT, $this->defaultFormat));
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-suppress InvalidNullableReturnType
      */
     public function denormalize($data, Type $type, DenormalizationContext $context)
     {
+        // @fixme does this case really occurs ? No other normalizer handle this case
         if ($data === null) {
+            /** @psalm-suppress NullableReturnStatement */
             return null;
         }
 
@@ -70,14 +76,14 @@ class DateTimeNormalizer implements NormalizerInterface
         }
 
         if ($format !== null) {
-            /** @var DateTimeInterface $date */
             $date = $className::createFromFormat($format, $data, $timezoneHint);
         } else {
-            /** @var DateTimeInterface $date */
+            /** @psalm-suppress UnsafeInstantiation */
             $date = new $className($data, $timezoneHint);
         }
 
         if ($timezone !== null) {
+            /** @psalm-suppress PossiblyFalseReference */
             $date = $date->setTimezone(new DateTimeZone($timezone));
         }
 

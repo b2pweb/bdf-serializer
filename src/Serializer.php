@@ -13,6 +13,8 @@ use Bdf\Serializer\Type\TypeFactory;
  * Serializer
  * 
  * @author  Seb
+ *
+ * @implements NormalizerInterface<mixed>
  */
 class Serializer implements SerializerInterface, NormalizerInterface, BinarySerializerInterface
 {
@@ -145,13 +147,18 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
     /**
      * {@inheritdoc}
      */
-    public function fromBinary(string $data, $type, array $context = [])
+    public function fromBinary(string $raw, $type, array $context = [])
     {
-        return $this->denormalize(igbinary_unserialize($data), TypeFactory::createType($type), new DenormalizationContext($this, $context));
+        return $this->denormalize(igbinary_unserialize($raw), TypeFactory::createType($type), new DenormalizationContext($this, $context));
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @template T
+     * @param mixed $data
+     * @param Type<T> $type
+     * @return T|T[]
      */
     public function denormalize($data, Type $type, DenormalizationContext $context)
     {
@@ -165,7 +172,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
             $denormalized = [];
 
             foreach ((array)$data as $key => $value) {
-                $denormalized[$key] = $this->denormalize($value, $type->subType(), $context);
+                $denormalized[$key] = $this->denormalize($value, $type->subType() ?? TypeFactory::mixedType(), $context);
             }
 
             return $denormalized;
@@ -175,7 +182,13 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
             return $type->convert($data);
         }
 
-        return $this->loader->getNormalizer($type->name())->denormalize($data, $type, $context);
+        /**
+         * @var NormalizerInterface<T> $normalizer
+         * @psalm-suppress ArgumentTypeCoercion
+         */
+        $normalizer = $this->loader->getNormalizer($type->name());
+
+        return $normalizer->denormalize($data, $type, $context);
     }
 
     /**

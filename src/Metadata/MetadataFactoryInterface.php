@@ -12,9 +12,10 @@ interface MetadataFactoryInterface
     /**
      * Get the related metadata
      *
-     * @param string|object $className
+     * @param class-string<T>|T $className
      *
-     * @return ClassMetadata
+     * @return ClassMetadata<T>
+     * @template T as object
      *
      * @throws UnexpectedValueException  if the class name has no metadata
      */

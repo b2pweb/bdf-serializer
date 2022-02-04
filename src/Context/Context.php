@@ -49,9 +49,11 @@ abstract class Context
      * Get an option
      *
      * @param string $key
-     * @param mixed|null $default
+     * @param T $default
      *
-     * @return mixed|null
+     * @return (T is null ? mixed|null : T)
+     *
+     * @template T
      */
     public function option(string $key, $default = null)
     {

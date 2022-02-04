@@ -10,6 +10,8 @@ use Traversable;
 
 /**
  * TraversableNormalizer
+ *
+ * @implements NormalizerInterface<Traversable>
  */
 class TraversableNormalizer implements NormalizerInterface
 {
@@ -33,6 +35,7 @@ class TraversableNormalizer implements NormalizerInterface
     public function denormalize($data, Type $type, DenormalizationContext $context)
     {
         $className = $type->name();
+        /** @var \ArrayAccess&Traversable $denormalized */
         $denormalized = new $className;
 
         foreach ((array)$data as $key => $value) {
