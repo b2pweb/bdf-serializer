@@ -17,13 +17,15 @@ use Psr\SimpleCache\CacheInterface;
  * Builder for serializer.
  *
  * @author seb
+ *
+ * @psalm-consistent-constructor
  */
 class SerializerBuilder
 {
     /**
      * The cache for normalizer
      *
-     * @var CacheInterface
+     * @var CacheInterface|null
      */
     private $cache;
 

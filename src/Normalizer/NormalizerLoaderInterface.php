@@ -12,18 +12,19 @@ interface NormalizerLoaderInterface
     /**
      * Get the object normalizer
      *
-     * @param string|object $className
+     * @param class-string<T>|T $className
      *
-     * @return NormalizerInterface
+     * @return NormalizerInterface<T>
      *
      * @throws UnexpectedValueException  if no normalizer has been found
+     * @template T as object
      */
     public function getNormalizer($className): NormalizerInterface;
 
     /**
      * Associate a normalizer to a class name
      *
-     * @param string $className
+     * @param class-string $className
      * @param NormalizerInterface $normalizer
      *
      * @return $this

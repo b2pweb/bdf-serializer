@@ -81,9 +81,16 @@ class ClosureAccessor implements PropertyAccessorInterface
     {
         $property = $this->property;
 
-        return Closure::bind(function($object) use ($property) {
-            return $object->$property;
-        }, null, $this->class);
+        return Closure::bind(
+            /**
+             * @param object $object
+             * @return mixed
+             */
+            function($object) use ($property) {
+                return $object->$property;
+            },
+            null, $this->class
+        );
     }
 
     /**
@@ -95,9 +102,17 @@ class ClosureAccessor implements PropertyAccessorInterface
     {
         $property = $this->property;
 
-        return Closure::bind(function($object, $value) use ($property) {
-            $object->$property = $value;
-        }, null, $this->class);
+        return Closure::bind(
+            /**
+             * @param object $object
+             * @param mixed $value
+             * @return void
+             */
+            function($object, $value) use ($property) {
+                $object->$property = $value;
+            },
+            null, $this->class
+        );
     }
 
     /**

@@ -16,6 +16,8 @@ use SuperClosure\SerializerInterface;
  * ClosureNormalizer
  *
  * @author  Seb
+ *
+ * @implements NormalizerInterface<\Closure>
  */
 class ClosureNormalizer implements NormalizerInterface, AutoRegisterInterface
 {
@@ -40,11 +42,12 @@ class ClosureNormalizer implements NormalizerInterface, AutoRegisterInterface
      * {@inheritdoc}
      *
      * @throws UnexpectedValueException If the closure could not be serialize
+     * @psalm-suppress InvalidCatch
      */
-    public function normalize($object, NormalizationContext $context)
+    public function normalize($data, NormalizationContext $context)
     {
         try {
-            return $this->serializer->serialize($object);
+            return $this->serializer->serialize($data);
         } catch (SuperClosureException $e) {
             throw new UnexpectedValueException('Could not normalize closure object', 0, $e);
         }
@@ -54,6 +57,7 @@ class ClosureNormalizer implements NormalizerInterface, AutoRegisterInterface
      * {@inheritdoc}
      *
      * @throws UnexpectedValueException If the closure could not be unserialize
+     * @psalm-suppress InvalidCatch
      */
     public function denormalize($data, Type $type, DenormalizationContext $context)
     {

@@ -12,19 +12,21 @@ use stdClass;
  * ObjectNormalizer
  *
  * @author  Seb
+ *
+ * @implements NormalizerInterface<stdClass>
  */
 class ObjectNormalizer implements NormalizerInterface, AutoRegisterInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, NormalizationContext $context)
+    public function normalize($data, NormalizationContext $context)
     {
-        $hash = $context->assertNoCircularReference($object);
+        $hash = $context->assertNoCircularReference($data);
 
         $normalized = [];
 
-        foreach ((array)$object as $property => $value) {
+        foreach ((array)$data as $property => $value) {
             $value = $context->root()->normalize($value, $context);
 
             if ($value === null && !$context->shouldAddNull()) {

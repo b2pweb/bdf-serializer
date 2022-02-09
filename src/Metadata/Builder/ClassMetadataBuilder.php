@@ -11,13 +11,14 @@ use ReflectionClass;
  * ClassMetadata
  *
  * @author  Seb
+ * @template T as object
  */
 class ClassMetadataBuilder
 {
     /**
      * The class reflection
      *
-     * @var ReflectionClass
+     * @var ReflectionClass<T>
      */
     private $reflection;
 
@@ -52,7 +53,7 @@ class ClassMetadataBuilder
     /**
      * ClassMetadataBuilder constructor.
      *
-     * @param ReflectionClass $reflection
+     * @param ReflectionClass<T> $reflection
      */
     public function __construct(ReflectionClass $reflection)
     {
@@ -62,16 +63,18 @@ class ClassMetadataBuilder
     /**
      * Build the class normalizer
      *
-     * @return ClassMetadata
+     * @return ClassMetadata<T>
      */
     public function build(): ClassMetadata
     {
-        $metadata = new ClassMetadata($this->reflection->name);
+        $metadata = new ClassMetadata($this->reflection->getName());
 
         $alias = [];
 
         foreach ($this->properties as $name => $property) {
-            $alias[$property->getAlias()] = $name;
+            if ($propertyAlias = $property->getAlias()) {
+                $alias[$propertyAlias] = $name;
+            }
 
             if ($this->useGetters && $method = AccessorGuesser::guessGetter($metadata->name, $name)) {
                 $property->readWith($method);

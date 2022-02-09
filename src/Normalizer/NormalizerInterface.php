@@ -8,13 +8,15 @@ use Bdf\Serializer\Type\Type;
 
 /**
  * Interface NormalizerInterface
+ *
+ * @template T
  */
 interface NormalizerInterface
 {
     /**
      * Normalize data
      *
-     * @param mixed  $data
+     * @param T $data
      * @param NormalizationContext $context
      *
      * @return mixed
@@ -24,20 +26,21 @@ interface NormalizerInterface
     /**
      * Denormalize data
      *
-     * @param mixed   $data
-     * @param Type    $type
+     * @param mixed $data
+     * @param Type<T> $type
      * @param DenormalizationContext $context
      *
-     * @return mixed
+     * @return T
      */
     public function denormalize($data, Type $type, DenormalizationContext $context);
 
     /**
      * Check whether the normalizer support the class name
      *
-     * @param string $className
+     * @param class-string $className
      *
      * @return boolean
+     * @psalm-assert-if-true T $className
      */
     public function supports(string $className): bool;
 }
