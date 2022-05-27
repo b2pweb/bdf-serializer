@@ -95,7 +95,7 @@ class ClassMetadataBuilder
 
     /**
      * Get the class name
-     * 
+     *
      * @return string
      */
     public function name(): string

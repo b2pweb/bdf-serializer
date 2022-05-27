@@ -8,9 +8,9 @@ use ReflectionClass;
 
 /**
  * StaticMethodDriver
- * 
+ *
  * call a static method on the reflection class to set the class metadata
- * 
+ *
  * @author  Seb
  */
 class StaticMethodDriver implements DriverInterface
@@ -22,7 +22,7 @@ class StaticMethodDriver implements DriverInterface
 
     /**
      * Set the static method name for static method driver
-     * 
+     *
      * @param string $method
      */
     public function __construct(string $method = 'loadSerializerMetadata')
@@ -38,7 +38,7 @@ class StaticMethodDriver implements DriverInterface
         if ($class->isInterface() || !$class->hasMethod($this->method)) {
             return null;
         }
-        
+
         $method = $class->getMethod($this->method);
 
         if ($method->isAbstract() || !$method->isStatic()) {
@@ -47,7 +47,7 @@ class StaticMethodDriver implements DriverInterface
 
         $builder = new ClassMetadataBuilder($class);
         $method->invoke(null, $builder);
-        
+
         return $builder->build();
     }
 }

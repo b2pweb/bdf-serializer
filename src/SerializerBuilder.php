@@ -55,7 +55,7 @@ class SerializerBuilder
 
     /**
      * Set the cache
-     * 
+     *
      * @param CacheInterface $cache  The cache driver.
      *
      * @return $this
@@ -97,7 +97,7 @@ class SerializerBuilder
 
     /**
      * Build the serializer
-     * 
+     *
      * @return Serializer
      */
     public function build()

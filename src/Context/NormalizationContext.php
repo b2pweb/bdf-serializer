@@ -14,17 +14,17 @@ use Bdf\Serializer\Normalizer\NormalizerInterface;
 class NormalizationContext extends Context
 {
     //List of denormalization options
-    const EXCLUDES = 'exclude';
-    const INCLUDES = 'include';
-    const GROUPS = 'groups';
-    const NULL = 'null';
-    const META_TYPE = 'include_type';
-    const VERSION = 'version';
-    const DATETIME_FORMAT = 'dateFormat';
-    const TIMEZONE = 'dateTimezone';
-    const CIRCULAR_REFERENCE_LIMIT = 'circular_reference_limit';
-    const REMOVE_DEFAULT_VALUE = 'remove_default_value';
-    const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
+    public const EXCLUDES = 'exclude';
+    public const INCLUDES = 'include';
+    public const GROUPS = 'groups';
+    public const NULL = 'null';
+    public const META_TYPE = 'include_type';
+    public const VERSION = 'version';
+    public const DATETIME_FORMAT = 'dateFormat';
+    public const TIMEZONE = 'dateTimezone';
+    public const CIRCULAR_REFERENCE_LIMIT = 'circular_reference_limit';
+    public const REMOVE_DEFAULT_VALUE = 'remove_default_value';
+    public const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
 
     /**
      * The default options of this context

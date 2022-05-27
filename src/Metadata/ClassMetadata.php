@@ -77,7 +77,6 @@ class ClassMetadata
         }
 
         return null;
-
     }
 
     /**

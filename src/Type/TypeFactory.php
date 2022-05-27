@@ -115,7 +115,7 @@ class TypeFactory
      *
      * @return Type<mixed>
      */
-    static public function mixedType(): Type
+    public static function mixedType(): Type
     {
         return new Type(Type::MIXED, true);
     }

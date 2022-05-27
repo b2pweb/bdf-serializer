@@ -4,14 +4,14 @@ namespace Bdf\Serializer\PropertyAccessor;
 
 /**
  * PublicAccessor
- * 
+ *
  * Manage public property
  */
 class PublicAccessor implements PropertyAccessorInterface
 {
     /**
      * Property name
-     * 
+     *
      * @var string
      */
     private $property;

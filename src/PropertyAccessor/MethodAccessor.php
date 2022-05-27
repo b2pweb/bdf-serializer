@@ -6,14 +6,14 @@ use InvalidArgumentException;
 
 /**
  * MethodAccessor
- * 
+ *
  * Manage access by a method
  */
 class MethodAccessor implements PropertyAccessorInterface
 {
     /**
      * The getter method name
-     * 
+     *
      * @var string|null
      */
     private $getter;

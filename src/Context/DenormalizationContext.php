@@ -11,10 +11,10 @@ use Bdf\Serializer\Normalizer\NormalizerInterface;
 class DenormalizationContext extends Context
 {
     //List of denormalization options
-    const DATETIME_FORMAT = 'dateFormat';
-    const TIMEZONE = 'dateTimezone';
-    const TIMEZONE_HINT = 'timezoneHint';
-    const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
+    public const DATETIME_FORMAT = 'dateFormat';
+    public const TIMEZONE = 'dateTimezone';
+    public const TIMEZONE_HINT = 'timezoneHint';
+    public const THROWS_ON_ACCESSOR_ERROR = 'throws_on_accessor_error';
 
     /**
      * The default options of this context

@@ -6,7 +6,7 @@ use ReflectionProperty;
 
 /**
  * ReflectionAccessor
- * 
+ *
  * Use reflection to access object property
  */
 class ReflectionAccessor implements PropertyAccessorInterface
@@ -27,14 +27,14 @@ class ReflectionAccessor implements PropertyAccessorInterface
 
     /**
      * The property reflection
-     * 
+     *
      * @var ReflectionProperty
      */
     private $reflection;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param string $class
      * @param string $property
      */
@@ -44,7 +44,7 @@ class ReflectionAccessor implements PropertyAccessorInterface
         $this->property = $property;
         $this->reflection = $this->createReflection();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -52,7 +52,7 @@ class ReflectionAccessor implements PropertyAccessorInterface
     {
         $this->reflection->setValue($object, $value);
     }
-    
+
     /**
      * {@inheritdoc}
      */
