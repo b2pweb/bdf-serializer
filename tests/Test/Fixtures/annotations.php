@@ -88,3 +88,15 @@ class IgnoreProperty
 
     public $name = 'john doe';
 }
+
+class WithPsalmAnnotation
+{
+    /**
+     * @var array{foo: string, bar: array}|null
+     */
+    public $arrayStructure;
+    /**
+     * @var \ArrayObject<int, Person>
+     */
+    public $withGenerics;
+}

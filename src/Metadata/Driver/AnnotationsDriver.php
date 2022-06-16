@@ -169,6 +169,10 @@ class AnnotationsDriver implements DriverInterface
     {
         switch ($tag->getName()) {
             case 'var':
+                if ($tag instanceof DocBlock\Tags\InvalidTag) {
+                    return ['type', $this->findType((string) $tag, $property)];
+                }
+
                 /** @var DocBlock\Tags\Var_ $tag */
                 return ['type', $this->findType((string)$tag->getType(), $property)];
 
@@ -197,6 +201,10 @@ class AnnotationsDriver implements DriverInterface
      */
     private function findType($var, $property): ?string
     {
+        // Clear psalm structure notation and generics
+        $var = preg_replace('/(.*)\{.*\}/u', '$1', $var);
+        $var = preg_replace('/(.*)<.*>/u', '$1', $var);
+
         // All known alias from phpdoc that should be mapped to a serializer type
         $alias = [
             'bool' => Type::BOOLEAN,
