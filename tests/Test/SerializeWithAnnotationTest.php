@@ -93,4 +93,25 @@ class SerializeWithAnnotationTest extends TestCase
         $this->assertFalse(isset($data['toIgnore']));
         $this->assertTrue(isset($data['name']));
     }
+
+    /**
+     *
+     */
+    public function test_with_psalm_type()
+    {
+        $serializer = SerializerBuilder::create()->build();
+
+        $o = new WithPsalmAnnotation();
+        $o->arrayStructure = ['foo' => 'bar', [1, 2, 3]];
+        $o->withGenerics = new \ArrayObject([4, 5, 6]);
+
+        $serialized = $serializer->toArray($o);
+
+        $this->assertSame([
+            'arrayStructure' => ['foo' => 'bar', [1, 2, 3]],
+            'withGenerics' => [4, 5, 6],
+        ], $serialized);
+
+        $this->assertEquals($o, $serializer->fromArray($serialized, WithPsalmAnnotation::class));
+    }
 }

@@ -1,0 +1,20 @@
+filter:
+  paths: ["src/*"]
+  excluded_paths:
+    - "tests/"
+
+build:
+  environment:
+    php: 7.4
+
+  nodes:
+    tests:
+      environment:
+        timezone: Europe/Paris
+
+      tests:
+        override:
+          - command: composer run tests-with-coverage
+            coverage:
+              file: coverage.xml
+              format: clover

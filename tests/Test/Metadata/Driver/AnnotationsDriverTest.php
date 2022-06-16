@@ -6,6 +6,7 @@ use Bdf\Serializer\Metadata\ClassMetadata;
 use Bdf\Serializer\Metadata\Driver\Bdf\Customer;
 use Bdf\Serializer\Metadata\Driver\Bdf\User;
 use Bdf\Serializer\Type\Type;
+use Bdf\Serializer\WithPsalmAnnotation;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -22,6 +23,7 @@ class AnnotationsDriverTest extends TestCase
         parent::setUp();
 
         include_once __DIR__.'/../../Fixtures/bdf_annotations.php';
+        include_once __DIR__.'/../../Fixtures/annotations.php';
     }
 
     /**
@@ -46,4 +48,20 @@ class AnnotationsDriverTest extends TestCase
         $this->assertEquals(Customer::class, $metadata->property('customer')->type()->name());
     }
 
+    /**
+     * @group test
+     */
+    public function test_load_annotations_with_psalm_types()
+    {
+        $driver = new AnnotationsDriver();
+
+        $reflection = new ReflectionClass(WithPsalmAnnotation::class);
+        $metadata = $driver->getMetadataForClass($reflection);
+
+        $this->assertInstanceOf(ClassMetadata::class, $metadata);
+        $this->assertEquals(WithPsalmAnnotation::class, $metadata->name());
+
+        $this->assertEquals('array', $metadata->property('arrayStructure')->type()->name());
+        $this->assertEquals(\ArrayObject::class, $metadata->property('withGenerics')->type()->name());
+    }
 }
