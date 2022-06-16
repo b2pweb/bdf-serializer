@@ -11,7 +11,7 @@ use Bdf\Serializer\Type\TypeFactory;
 
 /**
  * Serializer
- * 
+ *
  * @author  Seb
  *
  * @implements NormalizerInterface<mixed>

@@ -58,7 +58,7 @@ class TypedPropertyAccessor implements PropertyAccessorInterface
             throw new AccessorException('Cannot write value on the property '.$this->class.'::'.$this->property.' on serializer', 0, $exception);
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */

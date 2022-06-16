@@ -9,5 +9,4 @@ use Bdf\Serializer\Exception\SerializerException;
  */
 class AccessorException extends \UnexpectedValueException implements SerializerException
 {
-
 }

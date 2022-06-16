@@ -12,7 +12,6 @@ class NullAccessor implements PropertyAccessorInterface
      */
     public function write($object, $value)
     {
-
     }
 
     /**

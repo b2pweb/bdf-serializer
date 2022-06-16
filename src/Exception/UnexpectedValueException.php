@@ -7,5 +7,4 @@ namespace Bdf\Serializer\Exception;
  */
 class UnexpectedValueException extends \UnexpectedValueException implements SerializerException
 {
-
 }

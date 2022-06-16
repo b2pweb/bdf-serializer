@@ -13,7 +13,7 @@ use ReflectionClass;
 
 /**
  * PropertyMetadataBuilder
- * 
+ *
  * @author  Seb
  */
 class PropertyMetadataBuilder
@@ -512,7 +512,7 @@ class PropertyMetadataBuilder
                 case 'type':
                     $this->type($value);
                     break;
-                
+
                 case 'group':
                 case 'groups':
                     $this->groups((array)$value);
@@ -544,7 +544,7 @@ class PropertyMetadataBuilder
 //                    break;
             }
         }
-        
+
         return $this;
     }
 

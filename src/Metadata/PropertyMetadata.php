@@ -7,7 +7,7 @@ use Bdf\Serializer\Type\Type;
 
 /**
  * PropertyMetadata
- * 
+ *
  * @author  Seb
  *
  * @psalm-suppress PropertyNotSetInConstructor

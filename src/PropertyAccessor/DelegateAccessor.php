@@ -9,7 +9,7 @@ class DelegateAccessor implements PropertyAccessorInterface
 {
     /**
      * The reader accessor
-     * 
+     *
      * @var PropertyAccessorInterface
      */
     private $reader;

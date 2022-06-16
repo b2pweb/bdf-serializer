@@ -66,7 +66,7 @@ interface SerializerInterface
      * @return array
      */
     public function toArray($data, array $context = []);
-    
+
     /**
      * Restores objects from an array structure.
      *

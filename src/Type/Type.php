@@ -9,14 +9,14 @@ namespace Bdf\Serializer\Type;
  */
 final class Type
 {
-    const STRING = 'string';
-    const BOOLEAN = 'boolean';
-    const INTEGER = 'integer';
-    const FLOAT = 'float';
-    const DOUBLE = 'double';
-    const TARRAY = 'array';
-    const TNULL = 'null';
-    const MIXED = 'mixed';
+    public const STRING = 'string';
+    public const BOOLEAN = 'boolean';
+    public const INTEGER = 'integer';
+    public const FLOAT = 'float';
+    public const DOUBLE = 'double';
+    public const TARRAY = 'array';
+    public const TNULL = 'null';
+    public const MIXED = 'mixed';
 
     /**
      * @var class-string<T>|Type::*
@@ -204,7 +204,7 @@ final class Type
                 return (float) $value;
 
             case self::DOUBLE:
-                return (double) $value;
+                return (float) $value;
 
             case self::STRING:
                 return (string) $value;

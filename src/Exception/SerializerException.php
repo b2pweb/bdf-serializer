@@ -7,5 +7,4 @@ namespace Bdf\Serializer\Exception;
  */
 interface SerializerException
 {
-
 }

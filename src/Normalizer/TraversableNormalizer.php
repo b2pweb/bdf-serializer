@@ -36,7 +36,7 @@ class TraversableNormalizer implements NormalizerInterface
     {
         $className = $type->name();
         /** @var \ArrayAccess&Traversable $denormalized */
-        $denormalized = new $className;
+        $denormalized = new $className();
 
         foreach ((array)$data as $key => $value) {
             $denormalized[$key] = $context->root()->denormalize(
