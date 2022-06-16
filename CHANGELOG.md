@@ -1,9 +1,16 @@
+v1.1.2
+------
+
+* Ignore array or object structure notation on `@var` annotation
+* Add checkstyle
+
+
 v1.1.0
 ------
 * Adding support of virtual property
 * Adding support of annotations from JMS serializer
 * Adding support of php 7.4 typed properties (#4)
-* Fixed usage of buildin type int and bool
+* Fixed usage of builtin type int and bool
 
 
 v1.0.2
