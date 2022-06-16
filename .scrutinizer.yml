@@ -4,11 +4,13 @@ filter:
     - "tests/"
 
 build:
+  environment:
+    php: 7.4
+
   nodes:
     tests:
       environment:
-        timezone: FR
-        php: 7.4
+        timezone: Europe/Paris
 
       tests:
         override:
