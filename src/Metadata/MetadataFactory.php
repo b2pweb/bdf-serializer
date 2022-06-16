@@ -16,6 +16,7 @@ class MetadataFactory implements MetadataFactoryInterface
      * Metadata already resolve
      *
      * @var ClassMetadata[]
+     * @psalm-var class-string-map<T, ClassMetadata<T>>
      */
     private $metadata = [];
 
@@ -56,6 +57,8 @@ class MetadataFactory implements MetadataFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-suppress InvalidReturnType
      */
     public function getMetadata($className): ClassMetadata
     {
@@ -69,6 +72,7 @@ class MetadataFactory implements MetadataFactoryInterface
         }
 
         // Load metadata from drivers
+        /** @psalm-suppress InvalidReturnStatement */
         return $this->metadata[$className] = $this->loadMetadata($className);
     }
 

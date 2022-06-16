@@ -20,5 +20,4 @@ interface MetadataFactoryInterface
      * @throws UnexpectedValueException  if the class name has no metadata
      */
     public function getMetadata($className): ClassMetadata;
-
 }
