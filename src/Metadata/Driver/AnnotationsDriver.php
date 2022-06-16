@@ -14,9 +14,9 @@ use ReflectionProperty;
 
 /**
  * AnnotationsDriver
- * 
+ *
  * based on doctrine annotations
- * 
+ *
  * @author  Seb
  */
 class AnnotationsDriver implements DriverInterface

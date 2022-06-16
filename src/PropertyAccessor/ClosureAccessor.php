@@ -86,10 +86,11 @@ class ClosureAccessor implements PropertyAccessorInterface
              * @param object $object
              * @return mixed
              */
-            function($object) use ($property) {
+            function ($object) use ($property) {
                 return $object->$property;
             },
-            null, $this->class
+            null,
+            $this->class
         );
     }
 
@@ -108,10 +109,11 @@ class ClosureAccessor implements PropertyAccessorInterface
              * @param mixed $value
              * @return void
              */
-            function($object, $value) use ($property) {
+            function ($object, $value) use ($property) {
                 $object->$property = $value;
             },
-            null, $this->class
+            null,
+            $this->class
         );
     }
 

@@ -7,5 +7,4 @@ namespace Bdf\Serializer\Exception;
  */
 class CircularReferenceException extends \RuntimeException implements SerializerException
 {
-
 }
