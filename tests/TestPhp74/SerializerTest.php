@@ -20,6 +20,27 @@ class SerializerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function test_normalize_add_null_value_for_typed_properties()
+    {
+        $serializer = SerializerBuilder::create()->build();
+        $object = new PrivateAttribute(1, 'Foo');
+        $object->setAge(null);
+        $data = [
+            'id' => 1,
+            'firstName' => 'Foo',
+            'age' => null,
+        ];
+
+        $result = $serializer->toArray($object, ['null' => true]);
+        $this->assertEquals($data, $result);
+
+        $result = $serializer->toArray($object);
+        $this->assertEquals($data, $result);
+    }
+
+    /**
      * @dataProvider getEntityClasses
      */
     public function test_normalize($class)
@@ -32,7 +53,7 @@ class SerializerTest extends TestCase
         ];
         $object = new $class(1, 'Foo');
 
-        $this->assertEquals($data, $serializer->toArray($object, ['null' => true]));
+        $this->assertEquals($data, $serializer->toArray($object));
     }
 
     /**

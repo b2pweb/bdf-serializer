@@ -92,6 +92,13 @@ class PropertyMetadata
     public $defaultValue;
 
     /**
+     * Flag to know if the property used php type.
+     *
+     * @var bool
+     */
+    public $isPhpTyped = false;
+
+    /**
      * The context options for normalization.
      *
      * @var null|array
