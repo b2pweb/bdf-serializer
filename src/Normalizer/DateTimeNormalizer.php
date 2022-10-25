@@ -76,6 +76,7 @@ class DateTimeNormalizer implements NormalizerInterface
         }
 
         if ($format !== null) {
+            /** @var \DateTime|\DateTimeImmutable $date */
             $date = $className::createFromFormat($format, $data, $timezoneHint);
         } else {
             /** @psalm-suppress UnsafeInstantiation */
