@@ -10,6 +10,7 @@ use Bdf\Serializer\PropertyAccessor\PropertyAccessorInterface;
 use Bdf\Serializer\Type\TypeFactory;
 use Bdf\Serializer\Util\AccessorGuesser;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * PropertyMetadataBuilder
@@ -150,6 +151,15 @@ class PropertyMetadataBuilder
         $defaultValues = $this->reflection->getDefaultProperties();
         if (isset($defaultValues[$this->name])) {
             $property->setDefaultValue($defaultValues[$this->name]);
+        }
+
+        // Tag the property as typed property
+        if (PHP_VERSION_ID >= 70400) {
+            try {
+                $property->isPhpTyped = $this->reflection->getProperty($this->name)->hasType();
+            } catch (ReflectionException $exception) {
+                // The property could be virtual.
+            }
         }
 
         $this->clear();

@@ -51,7 +51,7 @@ class NormalizationContext extends Context
          */
         self::GROUPS => null,
         /**
-         * Null value will be added if true
+         * Null value will be added if true (for non typed properties only)
          *
          * @var boolean
          */
@@ -136,7 +136,7 @@ class NormalizationContext extends Context
     }
 
     /**
-     * Should the self::NULL value be included
+     * Should the self::NULL value be included (for non typed properties only)
      *
      * @return boolean
      */
@@ -195,7 +195,7 @@ class NormalizationContext extends Context
      */
     public function skipPropertyValue(PropertyMetadata $property, $value): bool
     {
-        if ($value === null) {
+        if ($value === null && false === $property->isPhpTyped) {
             return !$this->shouldAddNull();
         }
 
