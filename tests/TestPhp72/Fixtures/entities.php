@@ -3,6 +3,18 @@
 namespace Bdf\Serializer\TestPhp72;
 
 
+class Bar
+{
+    public $id;
+    public $label;
+}
+
+class BarWithDefaultValue
+{
+    public $id;
+    public $label = null;
+}
+
 class UserNonTyped
 {
     private $id;

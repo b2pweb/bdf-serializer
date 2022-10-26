@@ -199,12 +199,8 @@ class NormalizationContext extends Context
             return !$this->shouldAddNull();
         }
 
-        // This does not remove the 'null' default value.
-        if ($this->removeDefaultValue()) {
-            return $property->defaultValue === $value;
-        }
-
-        return false;
+        // This does not remove the 'null' default value for non typed properties.
+        return $this->removeDefaultValue() && $property->isDefaultValue($value);
     }
 
     /**

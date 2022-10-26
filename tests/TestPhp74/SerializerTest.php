@@ -33,11 +33,25 @@ class SerializerTest extends TestCase
             'age' => null,
         ];
 
-        $result = $serializer->toArray($object, ['null' => true]);
-        $this->assertEquals($data, $result);
+        $this->assertEquals($data, $serializer->toArray($object));
+        $this->assertEquals($data, $serializer->toArray($object, [NormalizationContext::NULL => true]));
+    }
 
-        $result = $serializer->toArray($object);
-        $this->assertEquals($data, $result);
+    /**
+     *
+     */
+    public function test_remove_default_value_when_equals_to_null()
+    {
+        $serializer = SerializerBuilder::create()->build();
+
+        $object = new Bar();
+        $object->label = null;
+        $this->assertEquals(['label' => null], $serializer->toArray($object, [NormalizationContext::REMOVE_DEFAULT_VALUE => true]));
+
+        $object = new BarWithDefaultValue();
+        $object->label = null;
+        $this->assertEquals(['label' => null], $serializer->toArray($object));
+        $this->assertEquals([], $serializer->toArray($object, [NormalizationContext::REMOVE_DEFAULT_VALUE => true]));
     }
 
     /**

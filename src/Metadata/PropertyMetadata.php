@@ -92,6 +92,13 @@ class PropertyMetadata
     public $defaultValue;
 
     /**
+     * A flag to know if the property has a default value.
+     *
+     * @var bool
+     */
+    private $hasDefaultValue = false;
+
+    /**
      * Flag to know if the property used php type.
      *
      * @var bool
@@ -356,6 +363,7 @@ class PropertyMetadata
     public function setDefaultValue($defaultValue): void
     {
         $this->defaultValue = $defaultValue;
+        $this->hasDefaultValue = true;
     }
 
     /**
@@ -366,6 +374,16 @@ class PropertyMetadata
     public function defaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * Check whether the value is the default value of the property.
+     *
+     * @param mixed $value
+     */
+    public function isDefaultValue($value): bool
+    {
+        return $this->hasDefaultValue && $this->defaultValue === $value;
     }
 
     /**
