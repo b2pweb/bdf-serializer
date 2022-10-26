@@ -1,3 +1,15 @@
+v1.1.4
+------
+
+* Fixed the null value should be removed only if set as default on typed properties (#FRAM-72) (#11)
+
+
+v1.1.3
+------
+
+* Fixed the serialization of null value for typed properties. The option `null` is not considered for typed properties (#FRAM-72) (#10).
+
+
 v1.1.2
 ------
 
