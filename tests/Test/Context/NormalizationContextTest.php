@@ -318,7 +318,7 @@ class NormalizationContextTest extends TestCase
     public function test_default_value()
     {
         $property = $this->property();
-        $property->defaultValue = 1;
+        $property->setDefaultValue(1);
 
         $context = $this->context();
         $this->assertFalse($context->skipPropertyValue($property, 0));

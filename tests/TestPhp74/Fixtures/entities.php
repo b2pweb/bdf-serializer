@@ -61,5 +61,11 @@ class Foo
 class Bar
 {
     public int $id;
-    public string $label;
+    public ?string $label;
+}
+
+class BarWithDefaultValue
+{
+    public int $id;
+    public ?string $label = null;
 }

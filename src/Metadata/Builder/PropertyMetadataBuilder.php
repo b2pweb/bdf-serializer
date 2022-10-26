@@ -149,7 +149,7 @@ class PropertyMetadataBuilder
         $property->setDenormalizationOptions($this->denormalizationOptions);
 
         $defaultValues = $this->reflection->getDefaultProperties();
-        if (isset($defaultValues[$this->name])) {
+        if (array_key_exists($this->name, $defaultValues)) {
             $property->setDefaultValue($defaultValues[$this->name]);
         }
 
