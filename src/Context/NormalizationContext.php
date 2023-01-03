@@ -239,7 +239,7 @@ class NormalizationContext extends Context
      */
     public function shouldNormalizeProperty(string $class, string $property): bool
     {
-        $path = "${class}::${property}";
+        $path = "{$class}::{$property}";
 
         $excludes = $this->excludeProperties();
 
