@@ -264,4 +264,88 @@ class SerializerOptionsTest extends TestCase
 
         $this->assertEquals('entity', $result->data());
     }
+
+    public function test_serialize_with_default_options()
+    {
+        $serializer = SerializerBuilder::create()
+            ->setDefaultNormalizationOptions(['version' => '0.0.1', 'include_type' => true])
+            ->build();
+
+        $data = [
+            '@type' => UserWithCustomer::class,
+            'data' => [
+                'id' => 1,
+                'customer' => [
+                    '@type' => Customer::class,
+                    'data'  => [
+                        'id' => 1,
+                    ]
+                ]
+            ],
+        ];
+
+        $object = new UserWithCustomer(1, 'user', new Customer(1, 'customer'));
+
+        $result = $serializer->serialize($object, 'json');
+
+        $this->assertEquals(json_encode($data), $result);
+    }
+
+    public function test_serialize_with_default_options_overridden()
+    {
+        $serializer = SerializerBuilder::create()
+            ->setDefaultNormalizationOptions(['version' => '1.0.1', 'include_type' => true])
+            ->build();
+
+        $data = [
+            '@type' => UserWithCustomer::class,
+            'data' => [
+                'id' => 1,
+                'testname' => 'user',
+                'customer' => [
+                    '@type' => Customer::class,
+                    'data'  => [
+                        'id' => 1,
+                        'name' => 'customer',
+                    ]
+                ]
+            ],
+        ];
+
+        $object = new UserWithCustomer(1, 'user', new Customer(1, 'customer'));
+
+        $result = $serializer->serialize($object, 'json');
+
+        $this->assertEquals(json_encode($data), $result);
+    }
+
+    public function test_unserialize_with_default_options()
+    {
+        $serializer = SerializerBuilder::create()
+            ->setDefaultDenormalizationOptions(['dateFormat' => '!d/m/y', 'dateTimezone' => 'Europe/Paris'])
+            ->build();
+
+        $result = $serializer->fromArray(['date' => ['14/05/26', '23/12/22', '01/02/03']], DateCollection::class);
+
+        $this->assertEquals([
+            new \DateTime('2026-05-14', new \DateTimeZone('Europe/Paris')),
+            new \DateTime('2022-12-23', new \DateTimeZone('Europe/Paris')),
+            new \DateTime('2003-02-01', new \DateTimeZone('Europe/Paris')),
+        ], $result->date);
+    }
+
+    public function test_unserialize_with_default_options_overridden()
+    {
+        $serializer = SerializerBuilder::create()
+            ->setDefaultDenormalizationOptions(['dateFormat' => '!d/m/Y', 'dateTimezone' => 'Europe/Paris'])
+            ->build();
+
+        $result = $serializer->fromArray(['date' => ['14/05/2026', '23/12/2022', '01/02/2003']], DateCollection::class);
+
+        $this->assertEquals([
+            new \DateTime('2026-05-14', new \DateTimeZone('Europe/Paris')),
+            new \DateTime('2022-12-23', new \DateTimeZone('Europe/Paris')),
+            new \DateTime('2003-02-01', new \DateTimeZone('Europe/Paris')),
+        ], $result->date);
+    }
 }

@@ -26,13 +26,31 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
     private $loader;
 
     /**
-     * Serializer constructor.
-     *
-     * @param NormalizerLoaderInterface $loader
+     * @var DenormalizationContext|null
      */
-    public function __construct(NormalizerLoaderInterface $loader)
+    private $defaultDenormalizationContext;
+
+    /**
+     * @var NormalizationContext|null
+     */
+    private $defaultNormalizationContext;
+
+    /**
+     * @param NormalizerLoaderInterface $loader
+     * @param array<string, mixed>|null $defaultDenormalizationOptions Default options to use when denormalizing (i.e. convert serialized data to PHP data).
+     * @param array<string, mixed>|null $defaultNormalizationOptions Default options to use when normalizing (i.e. convert PHP data to serialized data).
+     */
+    public function __construct(NormalizerLoaderInterface $loader, ?array $defaultDenormalizationOptions = null, ?array $defaultNormalizationOptions = null)
     {
         $this->loader = $loader;
+
+        if ($defaultDenormalizationOptions !== null) {
+            $this->defaultDenormalizationContext = new DenormalizationContext($this, $defaultDenormalizationOptions);
+        }
+
+        if ($defaultNormalizationOptions !== null) {
+            $this->defaultNormalizationContext = new NormalizationContext($this, $defaultNormalizationOptions);
+        }
     }
 
     /**
@@ -57,7 +75,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function toJson($data, array $context = [])
     {
-        $context = new NormalizationContext($this, $context);
+        $context = $this->normalizationContext($context);
 
         return json_encode($this->normalize($data, $context), $context->option('json_options', 0));
     }
@@ -67,7 +85,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function toBinary($data, array $context = [])
     {
-        return igbinary_serialize($this->normalize($data, new NormalizationContext($this, $context)));
+        return igbinary_serialize($this->normalize($data, $this->normalizationContext($context)));
     }
 
     /**
@@ -75,7 +93,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function toArray($data, array $context = [])
     {
-        return $this->normalize($data, new NormalizationContext($this, $context));
+        return $this->normalize($data, $this->normalizationContext($context));
     }
 
     /**
@@ -131,7 +149,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function fromArray(array $data, $type, array $context = [])
     {
-        return $this->denormalize($data, TypeFactory::createType($type), new DenormalizationContext($this, $context));
+        return $this->denormalize($data, TypeFactory::createType($type), $this->denormalizationContext($context));
     }
 
     /**
@@ -139,7 +157,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function fromJson(string $json, $type, array $context = [])
     {
-        $context = new DenormalizationContext($this, $context);
+        $context = $this->denormalizationContext($context);
 
         return $this->denormalize(json_decode($json, true, 512, $context->option('json_options', 0)), TypeFactory::createType($type), $context);
     }
@@ -149,7 +167,7 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     public function fromBinary(string $raw, $type, array $context = [])
     {
-        return $this->denormalize(igbinary_unserialize($raw), TypeFactory::createType($type), new DenormalizationContext($this, $context));
+        return $this->denormalize(igbinary_unserialize($raw), TypeFactory::createType($type), $this->denormalizationContext($context));
     }
 
     /**
@@ -207,5 +225,35 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
     public function getLoader(): NormalizerLoaderInterface
     {
         return $this->loader;
+    }
+
+    /**
+     * Create a new denormalization context, overriding the default context
+     *
+     * @param array<string, mixed> $context
+     * @return DenormalizationContext
+     */
+    private function denormalizationContext(array $context): DenormalizationContext
+    {
+        if ($this->defaultDenormalizationContext !== null) {
+            return $this->defaultDenormalizationContext->duplicate($context);
+        }
+
+        return new DenormalizationContext($this, $context);
+    }
+
+    /**
+     * Create a new normalization context, overriding the default context
+     *
+     * @param array<string, mixed> $context
+     * @return NormalizationContext
+     */
+    private function normalizationContext(array $context): NormalizationContext
+    {
+        if ($this->defaultNormalizationContext !== null) {
+            return $this->defaultNormalizationContext->duplicate($context);
+        }
+
+        return new NormalizationContext($this, $context);
     }
 }

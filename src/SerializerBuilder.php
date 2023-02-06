@@ -2,6 +2,8 @@
 
 namespace Bdf\Serializer;
 
+use Bdf\Serializer\Context\DenormalizationContext;
+use Bdf\Serializer\Context\NormalizationContext;
 use Bdf\Serializer\Metadata\Driver\AnnotationsDriver;
 use Bdf\Serializer\Metadata\Driver\DriverInterface;
 use Bdf\Serializer\Metadata\Driver\StaticMethodDriver;
@@ -42,6 +44,20 @@ class SerializerBuilder
      * @var DriverInterface[]
      */
     private $drivers = [];
+
+    /**
+     * Default options to use when denormalizing (i.e. convert serialized data to PHP data).
+     *
+     * @var array<string, mixed>|null
+     */
+    private $defaultDenormalizationOptions;
+
+    /**
+     * Default options to use when normalizing (i.e. convert PHP data to serialized data).
+     *
+     * @var array<string, mixed>|null
+     */
+    private $defaultNormalizationOptions;
 
     /**
      * Create a new builder
@@ -96,6 +112,34 @@ class SerializerBuilder
     }
 
     /**
+     * Configure default option to use when denormalizing (i.e. convert serialized data to PHP data).
+     *
+     * @param array<string, mixed>|null $defaultDenormalizationOptions
+     * @return $this
+     *
+     * @see DenormalizationContext
+     */
+    public function setDefaultDenormalizationOptions(?array $defaultDenormalizationOptions)
+    {
+        $this->defaultDenormalizationOptions = $defaultDenormalizationOptions;
+        return $this;
+    }
+
+    /**
+     * Configure default option to use when normalizing (i.e. convert PHP data to serialized data).
+     *
+     * @param array<string, mixed>|null $defaultNormalizationOptions
+     * @return $this
+     *
+     * @see NormalizationContext
+     */
+    public function setDefaultNormalizationOptions(?array $defaultNormalizationOptions)
+    {
+        $this->defaultNormalizationOptions = $defaultNormalizationOptions;
+        return $this;
+    }
+
+    /**
      * Build the serializer
      *
      * @return Serializer
@@ -117,6 +161,10 @@ class SerializerBuilder
             ];
         }
 
-        return new Serializer(new NormalizerLoader($this->normalizers));
+        return new Serializer(
+            new NormalizerLoader($this->normalizers),
+            $this->defaultDenormalizationOptions,
+            $this->defaultNormalizationOptions
+        );
     }
 }
