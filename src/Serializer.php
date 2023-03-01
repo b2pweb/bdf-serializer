@@ -26,14 +26,14 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
     private $loader;
 
     /**
-     * @var DenormalizationContext|null
+     * @var array<string, mixed>|null
      */
-    private $defaultDenormalizationContext;
+    private $defaultDenormalizationOptions;
 
     /**
-     * @var NormalizationContext|null
+     * @var array<string, mixed>|null
      */
-    private $defaultNormalizationContext;
+    private $defaultNormalizationOptions;
 
     /**
      * @param NormalizerLoaderInterface $loader
@@ -43,14 +43,8 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
     public function __construct(NormalizerLoaderInterface $loader, ?array $defaultDenormalizationOptions = null, ?array $defaultNormalizationOptions = null)
     {
         $this->loader = $loader;
-
-        if ($defaultDenormalizationOptions !== null) {
-            $this->defaultDenormalizationContext = new DenormalizationContext($this, $defaultDenormalizationOptions);
-        }
-
-        if ($defaultNormalizationOptions !== null) {
-            $this->defaultNormalizationContext = new NormalizationContext($this, $defaultNormalizationOptions);
-        }
+        $this->defaultDenormalizationOptions = $defaultDenormalizationOptions;
+        $this->defaultNormalizationOptions = $defaultNormalizationOptions;
     }
 
     /**
@@ -235,8 +229,8 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     private function denormalizationContext(array $context): DenormalizationContext
     {
-        if ($this->defaultDenormalizationContext !== null) {
-            return $this->defaultDenormalizationContext->duplicate($context);
+        if ($this->defaultDenormalizationOptions !== null) {
+            $context += $this->defaultDenormalizationOptions;
         }
 
         return new DenormalizationContext($this, $context);
@@ -250,10 +244,13 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     private function normalizationContext(array $context): NormalizationContext
     {
-        if ($this->defaultNormalizationContext !== null) {
-            return $this->defaultNormalizationContext->duplicate($context);
+        if ($this->defaultNormalizationOptions === null) {
+            return new NormalizationContext($this, $context);
         }
 
-        return new NormalizationContext($this, $context);
+        $contextObj = new NormalizationContext($this, $this->defaultNormalizationOptions);
+
+        // Use duplicate instead of merge to handle options aliases
+        return $context ? $contextObj->duplicate($context) : $contextObj;
     }
 }
