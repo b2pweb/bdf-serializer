@@ -229,11 +229,13 @@ class Serializer implements SerializerInterface, NormalizerInterface, BinarySeri
      */
     private function denormalizationContext(array $context): DenormalizationContext
     {
-        if ($this->defaultDenormalizationOptions !== null) {
-            $context += $this->defaultDenormalizationOptions;
+        if ($this->defaultDenormalizationOptions === null) {
+            return new DenormalizationContext($this, $context);
         }
 
-        return new DenormalizationContext($this, $context);
+        $contextObj = new DenormalizationContext($this, $this->defaultDenormalizationOptions);
+
+        return $context ? $contextObj->duplicate($context) : $contextObj;
     }
 
     /**
