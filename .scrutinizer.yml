@@ -6,12 +6,10 @@ filter:
 build:
   environment:
     php: 7.4
+    timezone: Europe/Paris
 
   nodes:
     tests:
-      environment:
-        timezone: Europe/Paris
-
       tests:
         override:
           - command: composer run tests-with-coverage
