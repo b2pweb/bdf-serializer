@@ -104,22 +104,6 @@ class ClassMetadataBuilder
     }
 
     /**
-     * Set the normalizer class name
-     *
-     * @param string $class
-     *
-     * @return $this
-     *
-     * @todo Allow the metadata to choose its normalize to use ?
-     */
-//    public function normalizerClass($class)
-//    {
-//        $this->normalizerClass = $class;
-//
-//        return $this;
-//    }
-
-    /**
      * Set the callback for post denormalization
      *
      * @param string $method

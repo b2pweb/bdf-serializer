@@ -544,14 +544,6 @@ class PropertyMetadataBuilder
                 case 'readOnly':
                     $this->readOnly((bool)$value);
                     break;
-
-//                case 'maxDepth':
-//                    $this->$property = $value;
-//                    break;
-//
-//                case 'inline':
-//                    $this->$property = (bool)$value;
-//                    break;
             }
         }
 

@@ -201,8 +201,6 @@ final class Type
                 return (int) $value;
 
             case self::FLOAT:
-                return (float) $value;
-
             case self::DOUBLE:
                 return (float) $value;
 
@@ -210,7 +208,7 @@ final class Type
                 return (string) $value;
 
             case self::BOOLEAN:
-                return !! $value;
+                return (bool) $value;
 
             case self::TNULL:
                 return null;
