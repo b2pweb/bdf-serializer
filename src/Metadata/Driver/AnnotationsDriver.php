@@ -83,6 +83,7 @@ class AnnotationsDriver implements DriverInterface
             $builder->postDenormalization('__wakeup');
         }
 
+        /** @var array<non-empty-string, array<string, mixed>> $annotations */
         foreach ($annotations as $name => $annotation) {
             $property = $builder->add($name, isset($annotation['type']) ? $annotation['type'] : Type::MIXED);
 

@@ -34,7 +34,11 @@ class ClosureNormalizerTest extends TestCase
 
         $object = function() {};
 
-        $this->assertRegExp('/SerializableClosure/', $serializer->toArray($object));
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression('/SerializableClosure/', $serializer->toArray($object));
+        } else {
+            $this->assertRegExp('/SerializableClosure/', $serializer->toArray($object));
+        }
     }
 
     /**

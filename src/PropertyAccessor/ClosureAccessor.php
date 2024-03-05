@@ -81,6 +81,7 @@ class ClosureAccessor implements PropertyAccessorInterface
     {
         $property = $this->property;
 
+        /** @var Closure */
         return Closure::bind(
             /**
              * @param object $object
@@ -103,6 +104,7 @@ class ClosureAccessor implements PropertyAccessorInterface
     {
         $property = $this->property;
 
+        /** @var Closure */
         return Closure::bind(
             /**
              * @param object $object

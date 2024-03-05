@@ -29,7 +29,7 @@ class PropertyMetadataBuilder
     /**
      * The property name
      *
-     * @var string
+     * @var non-empty-string
      */
     private $name;
 
@@ -121,7 +121,7 @@ class PropertyMetadataBuilder
      * PropertyMetadataBuilder constructor.
      *
      * @param ReflectionClass $reflection
-     * @param string $name
+     * @param non-empty-string $name
      */
     public function __construct(ReflectionClass $reflection, string $name)
     {

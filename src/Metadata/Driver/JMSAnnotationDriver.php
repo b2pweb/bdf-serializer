@@ -126,6 +126,7 @@ class JMSAnnotationDriver implements DriverInterface
     private function isPropertyStatic(JMSPropertyMetadata $metadata): bool
     {
         try {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $reflection = new \ReflectionProperty($metadata->class, $metadata->name);
 
             return $reflection->isStatic();

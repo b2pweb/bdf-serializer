@@ -14,7 +14,7 @@ class ReflectionAccessor implements PropertyAccessorInterface
     /**
      * The class name
      *
-     * @var string
+     * @var class-string
      */
     private $class;
 
@@ -35,7 +35,7 @@ class ReflectionAccessor implements PropertyAccessorInterface
     /**
      * Constructor
      *
-     * @param string $class
+     * @param class-string $class
      * @param string $property
      */
     public function __construct(string $class, string $property)

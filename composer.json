@@ -25,7 +25,7 @@
     "jeremeamia/superclosure": "^2.3",
     "jms/serializer": "^1.0|^3.0",
     "symfony/phpunit-bridge": "~4.3|~5.0|~6.0",
-    "vimeo/psalm": "~4.19"
+    "vimeo/psalm": "~4.18|~5.22"
   },
   "suggest": {
     "symfony/cache": "Required to use default cache if string path is given to builder (~4.3)",

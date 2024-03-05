@@ -148,7 +148,7 @@ class ClassMetadataBuilder
     /**
      * Get a property normalizer
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return PropertyMetadataBuilder
      */
@@ -164,13 +164,13 @@ class ClassMetadataBuilder
     /**
      * Add a property normalizer
      *
-     * @param string $name
-     * @param string $type
+     * @param non-empty-string $name
+     * @param string|null $type
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
      */
-    public function add(string $name, string $type = null, array $options = [])
+    public function add(string $name, ?string $type = null, array $options = [])
     {
         $property = new PropertyMetadataBuilder($this->reflection, $name);
         $property->type($type);
@@ -181,7 +181,7 @@ class ClassMetadataBuilder
     /**
      * Add a array property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -194,7 +194,7 @@ class ClassMetadataBuilder
     /**
      * Add a string property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -207,7 +207,7 @@ class ClassMetadataBuilder
     /**
      * Add a integer property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -220,7 +220,7 @@ class ClassMetadataBuilder
     /**
      * Add a boolean property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -233,7 +233,7 @@ class ClassMetadataBuilder
     /**
      * Add a float property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -246,7 +246,7 @@ class ClassMetadataBuilder
     /**
      * Add a null property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -259,7 +259,7 @@ class ClassMetadataBuilder
     /**
      * Add a mixed property. The property type will be guessed by the value
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -272,7 +272,7 @@ class ClassMetadataBuilder
     /**
      * Add a stdClass property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -285,7 +285,7 @@ class ClassMetadataBuilder
     /**
      * Add a DateTime property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
@@ -298,7 +298,7 @@ class ClassMetadataBuilder
     /**
      * Add a DateTimeImmutable property
      *
-     * @param string $name
+     * @param non-empty-string $name
      * @param array  $options
      *
      * @return PropertyMetadataBuilder
