@@ -11,6 +11,8 @@ use Bdf\Serializer\PropertyAccessor\ReflectionAccessor;
 use Bdf\Serializer\PropertyAccessor\TypedPropertyAccessor;
 use ReflectionClass;
 
+use function method_exists;
+
 /**
  * AccessorGuesser
  */
@@ -103,9 +105,11 @@ class AccessorGuesser
     public static function getPropertyAccessor(ReflectionClass $reflection, string $property): PropertyAccessorInterface
     {
         $reflection = self::getPropertyOwner($reflection, $property);
+        $propertyReflection = $reflection->getProperty($property);
 
         // use reflection accessor if not set. Guess if property is public to use tue public accessor
-        if ($reflection->getProperty($property)->isPublic()) {
+        // if the property is readonly, reflection or closure must be used for write
+        if ($propertyReflection->isPublic() && (!method_exists($propertyReflection, 'isReadOnly') || !$propertyReflection->isReadOnly())) {
             $propertyAccessor = new PublicAccessor($reflection->name, $property);
         } elseif (self::$useClosure) {
             $propertyAccessor = new ClosureAccessor($reflection->name, $property);
@@ -114,7 +118,7 @@ class AccessorGuesser
         }
 
         // In php >= 7.4 Use typed property reflection only if the property is typed to manage undefined state of the property
-        if (PHP_VERSION_ID >= 70400 && $reflection->getProperty($property)->hasType()) {
+        if (PHP_VERSION_ID >= 70400 && $propertyReflection->hasType()) {
             return new TypedPropertyAccessor($propertyAccessor, $reflection->name, $property);
         }
 
