@@ -8,6 +8,7 @@ use Bdf\Serializer\Type\Type;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use ReflectionClass;
 use ReflectionProperty;
@@ -22,7 +23,7 @@ use ReflectionProperty;
 class AnnotationsDriver implements DriverInterface
 {
     /**
-     * @var DocBlockFactory
+     * @var DocBlockFactoryInterface
      */
     private $docBlockFactory;
 
