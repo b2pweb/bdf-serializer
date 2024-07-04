@@ -8,6 +8,7 @@ use Bdf\Serializer\Type\Type;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use ReflectionClass;
 use ReflectionProperty;
@@ -22,7 +23,7 @@ use ReflectionProperty;
 class AnnotationsDriver implements DriverInterface
 {
     /**
-     * @var DocBlockFactory
+     * @var DocBlockFactoryInterface
      */
     private $docBlockFactory;
 
@@ -150,9 +151,8 @@ class AnnotationsDriver implements DriverInterface
         }
 
         // Adding php type if no precision has been added with annotation
-        if (PHP_VERSION_ID >= 70400 && $property->hasType() && !isset($annotations['type'])) {
-            /** @psalm-suppress UndefinedMethod */
-            $annotations['type'] = $this->findType($property->getType()->getName(), $property);
+        if (PHP_VERSION_ID >= 70400 && ($type = $property->getType()) && $type instanceof \ReflectionNamedType && !isset($annotations['type'])) {
+            $annotations['type'] = $this->findType($type->getName(), $property);
         }
 
         return $annotations;
