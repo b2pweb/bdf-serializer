@@ -150,9 +150,8 @@ class AnnotationsDriver implements DriverInterface
         }
 
         // Adding php type if no precision has been added with annotation
-        if (PHP_VERSION_ID >= 70400 && $property->hasType() && !isset($annotations['type'])) {
-            /** @psalm-suppress UndefinedMethod */
-            $annotations['type'] = $this->findType($property->getType()->getName(), $property);
+        if (PHP_VERSION_ID >= 70400 && ($type = $property->getType()) && $type instanceof \ReflectionNamedType && !isset($annotations['type'])) {
+            $annotations['type'] = $this->findType($type->getName(), $property);
         }
 
         return $annotations;
