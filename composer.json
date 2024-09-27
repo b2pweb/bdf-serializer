@@ -24,7 +24,7 @@
     "phpunit/phpunit": "~8.0|~9.0",
     "jeremeamia/superclosure": "^2.3",
     "jms/serializer": "^1.0|^3.0",
-    "symfony/phpunit-bridge": "~4.3|~5.0|~6.0",
+    "symfony/phpunit-bridge": "~4.3|~5.0|~6.0|~7.0",
     "vimeo/psalm": "~4.18|~5.22"
   },
   "suggest": {
