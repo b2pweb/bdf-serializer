@@ -40,7 +40,7 @@ class MethodAccessor implements PropertyAccessorInterface
      * @param string|null $getter  Set to false to desactivate
      * @param string|null $setter  Set to false to desactivate
      */
-    public function __construct(string $class, string $property, string $getter = null, string $setter = null)
+    public function __construct(string $class, string $property, ?string $getter = null, ?string $setter = null)
     {
         $this->property = $property;
         $this->getter = $getter;

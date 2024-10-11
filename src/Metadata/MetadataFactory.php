@@ -48,7 +48,7 @@ class MetadataFactory implements MetadataFactoryInterface
      * @param CacheInterface|null $cache
      * @param string     $cacheId
      */
-    public function __construct(array $drivers, CacheInterface $cache = null, $cacheId = 'serializer-metadata-')
+    public function __construct(array $drivers, ?CacheInterface $cache = null, $cacheId = 'serializer-metadata-')
     {
         $this->drivers = $drivers;
         $this->cache = $cache;

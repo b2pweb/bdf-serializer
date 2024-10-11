@@ -28,13 +28,13 @@ class AccessorGuesser
      *
      * @param ReflectionClass $reflection
      * @param string $property
-     * @param array $options
+     * @param array|null $options
      *
      * @return PropertyAccessorInterface
      *
      * @deprecated Use getMethodAccessor or getPropertyAccessor instead of
      */
-    public static function guessAccessor(ReflectionClass $reflection, string $property, array $options = null): PropertyAccessorInterface
+    public static function guessAccessor(ReflectionClass $reflection, string $property, ?array $options = null): PropertyAccessorInterface
     {
         // use reflection accessor if not set. Guess if property is public to use tue public accessor
         if ($options === null) {

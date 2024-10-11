@@ -63,11 +63,11 @@ abstract class Context
     /**
      * Create new context from this one
      *
-     * @param array $newOptions
+     * @param array|null $newOptions
      *
      * @return static
      */
-    public function duplicate(array $newOptions = null): self
+    public function duplicate(?array $newOptions = null): self
     {
         if ($newOptions === null) {
             return $this;
