@@ -69,7 +69,7 @@ class UserWithAnnotations extends UserParentWithAnnotations
      */
     private $customer;
 
-    public function __construct($id = null, $name = null, Customer $customer = null)
+    public function __construct($id = null, $name = null, ?Customer $customer = null)
     {
         parent::__construct($id);
 
@@ -93,7 +93,7 @@ class UserWithoutAnnotations
     private $name;
     private $customer;
 
-    public function __construct($id = null, $name = null, Customer $customer = null)
+    public function __construct($id = null, $name = null, ?Customer $customer = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -120,7 +120,7 @@ class UserWithCustomer
     private $name;
     private $customer;
 
-    public function __construct($id = null, $name = null, Customer $customer = null)
+    public function __construct($id = null, $name = null, ?Customer $customer = null)
     {
         $this->id   = $id;
         $this->name = $name;
@@ -286,7 +286,7 @@ class ObjectWithAccesors
 {
     private $data;
 
-    public function __construct(string $data = null)
+    public function __construct(?string $data = null)
     {
         $this->data = $data;
     }
@@ -326,7 +326,7 @@ class ObjectWithShortcutType
 {
     private $age;
 
-    public function __construct(int $age = null)
+    public function __construct(?int $age = null)
     {
         $this->age = $age;
     }

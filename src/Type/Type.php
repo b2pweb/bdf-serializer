@@ -52,7 +52,7 @@ final class Type
      * @param Type|null $subType
      * @param T|null $target
      */
-    public function __construct(string $name, bool $isBuildin, bool $isArray = false, Type $subType = null, $target = null)
+    public function __construct(string $name, bool $isBuildin, bool $isArray = false, ?Type $subType = null, $target = null)
     {
         /** @psalm-suppress PropertyTypeCoercion */
         $this->name = $name;

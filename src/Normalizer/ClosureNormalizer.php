@@ -31,9 +31,9 @@ class ClosureNormalizer implements NormalizerInterface, AutoRegisterInterface
     /**
      * ClosureNormalizer constructor.
      *
-     * @param SerializerInterface $serializer
+     * @param SerializerInterface|null $serializer
      */
-    public function __construct(SerializerInterface $serializer = null)
+    public function __construct(?SerializerInterface $serializer = null)
     {
         $this->serializer = $serializer ?: new Serializer(new TokenAnalyzer());
     }

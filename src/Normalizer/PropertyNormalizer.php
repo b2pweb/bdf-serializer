@@ -41,7 +41,7 @@ class PropertyNormalizer implements NormalizerInterface
      * @param MetadataFactoryInterface $metadataFactory
      * @param InstantiatorInterface|null $instantiator The instanciator provider. Should returns InstantiatorInterface.
      */
-    public function __construct(MetadataFactoryInterface $metadataFactory, InstantiatorInterface $instantiator = null)
+    public function __construct(MetadataFactoryInterface $metadataFactory, ?InstantiatorInterface $instantiator = null)
     {
         $this->metadataFactory = $metadataFactory;
         $this->instantiator = $instantiator;
