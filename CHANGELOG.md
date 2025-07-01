@@ -1,3 +1,8 @@
+v1.3.0
+------
+
+* Add support for `readonly` properties and classes (#FRAM-168) (#13)
+
 v1.1.4
 ------
 
