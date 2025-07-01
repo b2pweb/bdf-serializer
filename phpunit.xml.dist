@@ -22,6 +22,7 @@
             <directory suffix="Test.php">tests/Test</directory>
             <directory phpVersion="7.2" phpVersionOperator=">=">./tests/TestPhp72</directory>
             <directory phpVersion="7.4" phpVersionOperator=">=">./tests/TestPhp74</directory>
+            <directory phpVersion="8.0" phpVersionOperator=">=">./tests/TestPhp80</directory>
             <directory phpVersion="8.1" phpVersionOperator=">=">./tests/TestPhp81</directory>
             <directory phpVersion="8.2" phpVersionOperator=">=">./tests/TestPhp82</directory>
         </testsuite>
