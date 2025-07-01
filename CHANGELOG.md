@@ -2,6 +2,7 @@ v1.3.0
 ------
 
 * Add support for `readonly` properties and classes (#FRAM-168) (#13)
+* Fix usage of PHP union types in typed properties (#FRAM-171) (#14)
 
 v1.1.4
 ------
