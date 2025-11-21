@@ -69,7 +69,7 @@ class ReflectionAccessor implements PropertyAccessorInterface
     private function createReflection(): ReflectionProperty
     {
         $reflection = new ReflectionProperty($this->class, $this->property);
-        $reflection->setAccessible(true);
+        PHP_VERSION_ID >= 80100 or $reflection->setAccessible(true);
 
         return $reflection;
     }
