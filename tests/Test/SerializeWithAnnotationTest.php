@@ -105,13 +105,50 @@ class SerializeWithAnnotationTest extends TestCase
         $o->arrayStructure = ['foo' => 'bar', [1, 2, 3]];
         $o->withGenerics = new \ArrayObject([4, 5, 6]);
 
+        $p = new Person();
+        $p->firstName = 'alice';
+        $p->lastName = 'smith';
+        $o->withSingleGeneric = new \ArrayObject([$p]);
+
         $serialized = $serializer->toArray($o);
 
         $this->assertSame([
             'arrayStructure' => ['foo' => 'bar', [1, 2, 3]],
             'withGenerics' => [4, 5, 6],
+            'withSingleGeneric' => [
+                [
+                    'lastName' => 'smith',
+                ],
+            ],
         ], $serialized);
 
+        $expected = clone $o;
+        $expected->withSingleGeneric[0]->firstName = 'reload';
+
         $this->assertEquals($o, $serializer->fromArray($serialized, WithPsalmAnnotation::class));
+    }
+
+    /**
+     *
+     */
+    public function test_with_template_type()
+    {
+        $serializer = SerializerBuilder::create()->build();
+
+        $o = new Lexer([
+            new Token(42, 'foo'),
+            new Token(5, '123'),
+        ]);
+
+        $serialized = $serializer->toArray($o);
+
+        $this->assertSame([
+            'tokens' => [
+                ['key' => 42, 'value' => 'foo'],
+                ['key' => 5, 'value' => '123'],
+            ],
+        ], $serialized);
+
+        $this->assertEquals($o, $serializer->fromArray($serialized, Lexer::class));
     }
 }

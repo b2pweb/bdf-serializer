@@ -99,4 +99,57 @@ class WithPsalmAnnotation
      * @var \ArrayObject<int, Person>
      */
     public $withGenerics;
+
+    /**
+     * @var \ArrayObject<Person>
+     */
+    public $withSingleGeneric;
+
+    /**
+     * @var non-empty-string
+     */
+    public $nonEmptyString;
+}
+
+/**
+ * @template K
+ * @template V
+ */
+class Token
+{
+    /**
+     * @var K
+     */
+    public $key;
+
+    /**
+     * @var V
+     */
+    public $value;
+
+    public function __construct($key, $value)
+    {
+        $this->key = $key;
+        $this->value = $value;
+    }
+}
+
+/**
+ * @template T
+ * @template V
+ */
+class Lexer
+{
+    /**
+     * @var list<Token<T, V>>
+     */
+    public $tokens = [];
+
+    /**
+     * @param list<Token<T, V>> $tokens
+     */
+    public function __construct(array $tokens)
+    {
+        $this->tokens = $tokens;
+    }
 }

@@ -34,6 +34,7 @@ class TypeFactory
         Type::TARRAY      => true,
         'int'             => true,
         'bool'            => true,
+        'list'            => true,
     ];
 
     /**
@@ -64,12 +65,13 @@ class TypeFactory
             $collectionType = substr($type, 0, -2);
             $type = Type::TARRAY;
             $collection = true;
-        } elseif ($type === Type::TARRAY) { // array
+        } elseif ($type === Type::TARRAY || $type === 'list') { // array
             $collectionType = Type::MIXED;
             $collection = true;
         } elseif (($pos = strpos($type, '<')) !== false && $type[strlen($type) - 1] === '>') { // Type<SubType> syntax
             $collectionType = substr($type, $pos + 1, -1);
             $type = substr($type, 0, $pos);
+            $collection = $type === 'list' || $type === Type::TARRAY;
         }
 
         if ($collectionType) {

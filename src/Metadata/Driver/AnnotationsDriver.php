@@ -5,6 +5,7 @@ namespace Bdf\Serializer\Metadata\Driver;
 use Bdf\Serializer\Metadata\Builder\ClassMetadataBuilder;
 use Bdf\Serializer\Metadata\ClassMetadata;
 use Bdf\Serializer\Type\Type;
+use Bdf\Serializer\Type\TypeExpressionParser;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -12,6 +13,8 @@ use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use ReflectionClass;
 use ReflectionProperty;
+
+use function explode;
 
 /**
  * AnnotationsDriver
@@ -33,12 +36,36 @@ class AnnotationsDriver implements DriverInterface
     private $contextFactory;
 
     /**
-     * AnnotationsDriver constructor.
+     * All known alias from phpdoc that should be mapped to a serializer type
+     *
+     * @var array<string, string>
      */
-    public function __construct()
+    public $typeMapping = [
+        'bool' => Type::BOOLEAN,
+        'false' => Type::BOOLEAN,
+        'true' => Type::BOOLEAN,
+        'int' => Type::INTEGER,
+        'void' => Type::TNULL,
+        'scalar' => Type::STRING,
+        'iterable' => Type::TARRAY,
+        'list' => Type::TARRAY,
+        'object' => \stdClass::class,
+        'callback' => 'callable',
+        'non-empty-string' => Type::STRING,
+        'non-empty-list' => Type::TARRAY,
+        'non-empty-array' => Type::TARRAY,
+    ];
+
+    /**
+     * AnnotationsDriver constructor.
+     *
+     * @param array<string, string> $typeMapping Additional type mapping
+     */
+    public function __construct(array $typeMapping = [])
     {
         $this->docBlockFactory = DocBlockFactory::createInstance();
         $this->contextFactory = new ContextFactory();
+        $this->typeMapping += $typeMapping;
     }
 
     /**
@@ -55,13 +82,15 @@ class AnnotationsDriver implements DriverInterface
 
         // Get all properties annotations from the hierarchy
         do {
+            $templates = $this->getClassTemplates($reflection);
+
             foreach ($this->getClassProperties($reflection) as $property) {
                 // PHP serialize behavior: we skip the static properties.
                 if ($property->isStatic()) {
                     continue;
                 }
 
-                $annotation = $this->getPropertyAnnotations($property);
+                $annotation = $this->getPropertyAnnotations($property, $templates);
 
                 if (isset($annotation['SerializeIgnore'])) {
                     continue;
@@ -128,10 +157,11 @@ class AnnotationsDriver implements DriverInterface
      * Get annotations from the property
      *
      * @param ReflectionProperty $property
+     * @param array<string, string> $templates The class templates
      *
      * @return array
      */
-    private function getPropertyAnnotations(ReflectionProperty $property): array
+    private function getPropertyAnnotations(ReflectionProperty $property, array $templates): array
     {
         try {
             $tags = $this->docBlockFactory->create($property, $this->contextFactory->createFromReflector($property))->getTags();
@@ -143,7 +173,7 @@ class AnnotationsDriver implements DriverInterface
 
         // Tags mapping
         foreach ($tags as $tag) {
-            list($option, $value) = $this->createSerializationTag($tag, $property);
+            list($option, $value) = $this->createSerializationTag($tag, $property, $templates);
 
             if ($option !== null && !isset($annotations[$option])) {
                 $annotations[$option] = $value;
@@ -152,10 +182,44 @@ class AnnotationsDriver implements DriverInterface
 
         // Adding php type if no precision has been added with annotation
         if (PHP_VERSION_ID >= 70400 && ($type = $property->getType()) && $type instanceof \ReflectionNamedType && !isset($annotations['type'])) {
-            $annotations['type'] = $this->findType($type->getName(), $property);
+            $annotations['type'] = $this->findType($type->getName(), $property, []); // Templates are not applicable here
         }
 
         return $annotations;
+    }
+
+    /**
+     * Get the class templates
+     *
+     * @param ReflectionClass $class
+     *
+     * @return array<string, string> The key is the template name, the value is the description
+     */
+    private function getClassTemplates(ReflectionClass $class): array
+    {
+        try {
+            $tags = $this->docBlockFactory->create($class, $this->contextFactory->createFromReflector($class))->getTags();
+        } catch (\InvalidArgumentException $e) {
+            $tags = [];
+        }
+
+        $templates = [];
+
+        foreach ($tags as $tag) {
+            if (in_array($tag->getName(), ['template', 'template-covariant', 'template-contravariant', 'psalm-template', 'phpstan-template'], true)) {
+                /** @var DocBlock\Tags\BaseTag $tag */
+                $parts = explode(' ', trim((string) $tag), 2);
+                $type = trim($parts[0]);
+                $description = trim($parts[1] ?? '');
+
+                if ($type !== '') {
+                    $templates[$type] = $description;
+                    $templates[ltrim($class->getNamespaceName() . '\\' . $type, '\\')] = $description;
+                }
+            }
+        }
+
+        return $templates;
     }
 
     /**
@@ -163,19 +227,20 @@ class AnnotationsDriver implements DriverInterface
      *
      * @param Tag $tag
      * @param ReflectionProperty $property
+     * @param array<string, string> $templates The class templates
      *
      * @return array
      */
-    private function createSerializationTag($tag, $property): array
+    private function createSerializationTag($tag, $property, array $templates): array
     {
         switch ($tag->getName()) {
             case 'var':
                 if ($tag instanceof DocBlock\Tags\InvalidTag) {
-                    return ['type', $this->findType((string) $tag, $property)];
+                    return ['type', $this->findType((string) $tag, $property, $templates)];
                 }
 
                 /** @var DocBlock\Tags\Var_ $tag */
-                return ['type', $this->findType((string)$tag->getType(), $property)];
+                return ['type', $this->findType((string)$tag->getType(), $property, $templates)];
 
             case 'since':
                 /** @var DocBlock\Tags\Since $tag */
@@ -197,47 +262,52 @@ class AnnotationsDriver implements DriverInterface
      *
      * @param string $var
      * @param ReflectionProperty $property
+     * @param array<string, string> $templates The class templates
      *
      * @return string
      */
-    private function findType($var, $property): ?string
+    private function findType($var, $property, array $templates): ?string
     {
-        // Clear psalm structure notation and generics
-        $var = preg_replace('/(.*)\{.*\}/u', '$1', $var);
-        $var = preg_replace('/(.*)<.*>/u', '$1', $var);
-
         // All known alias from phpdoc that should be mapped to a serializer type
         $alias = [
-            'bool' => Type::BOOLEAN,
-            'false' => Type::BOOLEAN,
-            'true' => Type::BOOLEAN,
-            'int' => Type::INTEGER,
-            'void' => Type::TNULL,
-            'scalar' => Type::STRING,
-            'iterable' => Type::TARRAY,
-            'object' => \stdClass::class,
-            'callback' => 'callable',
-            'self' => $property->class,
-            '$this' => $property->class,
-            'static' => $property->class,
-        ];
+                'self' => $property->class,
+                '$this' => $property->class,
+                'static' => $property->class,
+            ]
+            + $this->typeMapping
+            + array_fill_keys(array_keys($templates), Type::MIXED)  // Do not resolve the actual template type, use mixed instead
+        ;
 
-        if (strpos($var, '|') === false) {
-            $var = ltrim($var, '\\');
-
-            return isset($alias[$var]) ? $alias[$var] : $var;
-        }
-
-        foreach (explode('|', $var) as $candidate) {
+        foreach (TypeExpressionParser::parseString($var) as $intersection) {
+            // Only take in account the first type of the intersection
+            $candidate = $intersection[0][0];
             $candidate = ltrim($candidate, '\\');
 
             if (isset($alias[$candidate])) {
                 $candidate = $alias[$candidate];
             }
 
-            if ($candidate !== '' && $candidate !== Type::TNULL) {
+            if ($candidate === '' || $candidate === Type::TNULL) {
+                continue;
+            }
+
+            // Only support types with at most one simple generic type, so if there is more, we skip it
+            if (
+                count($intersection[0]) !== 2 // more than one generic type
+                || count($intersection[0][1]) !== 1 // the generic type is an union
+                || count($intersection[0][1][0]) !== 1 // the generic type is an intersection
+            ) {
                 return $candidate;
             }
+
+            $generic = ltrim($intersection[0][1][0][0][0], '\\');
+
+            if (isset($alias[$generic])) {
+                $generic = $alias[$generic];
+            }
+
+            // Ignore more complex generic types for now
+            return $candidate . '<' . $generic . '>';
         }
 
         // We let here the getMetadataForClass add the default type

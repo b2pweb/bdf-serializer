@@ -139,6 +139,32 @@ class TypeFactoryTest extends TestCase
     /**
      *
      */
+    public function test_parametrized_array()
+    {
+        $type = TypeFactory::createType('array<SubType>');
+
+        $this->assertTrue($type->isParametrized());
+        $this->assertTrue($type->isArray());
+        $this->assertSame('array', $type->name());
+        $this->assertSame('SubType', $type->subType()->name());
+    }
+
+    /**
+     *
+     */
+    public function test_parametrized_list()
+    {
+        $type = TypeFactory::createType('list<SubType>');
+
+        $this->assertTrue($type->isParametrized());
+        $this->assertTrue($type->isArray());
+        $this->assertSame('list', $type->name());
+        $this->assertSame('SubType', $type->subType()->name());
+    }
+
+    /**
+     *
+     */
     public function test_complex_type()
     {
         $type = TypeFactory::createType('Wrapper<MyType<SubType>>[]');
