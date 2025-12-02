@@ -2,6 +2,7 @@
 
 namespace Bdf\Serializer\Type;
 
+use function array_values;
 use function count;
 use function in_array;
 use function preg_quote;
@@ -30,7 +31,7 @@ final class TypeExpressionParser
      */
     public static function parseString(string $type): array
     {
-        $state = new TypeExpressionParserState(preg_split('/([' . preg_quote(implode(self::META_TOKENS)) . '])/', $type, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE));
+        $state = new TypeExpressionParserState(array_values(preg_split('/([' . preg_quote(implode(self::META_TOKENS)) . '])/', $type, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE)));
 
         return self::parseUnionType($state);
     }
@@ -111,10 +112,14 @@ final class TypeExpressionParserState
      * @var list<string>
      */
     public $tokens;
+
+    /**
+     * @var non-negative-int
+     */
     public $position = 0;
 
     /**
-     * @param string[] $tokens
+     * @param list<string> $tokens
      */
     public function __construct(array $tokens)
     {
