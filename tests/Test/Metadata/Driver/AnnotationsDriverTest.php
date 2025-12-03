@@ -2,9 +2,12 @@
 
 namespace Bdf\Serializer\Metadata\Driver;
 
+use Bdf\Serializer\Lexer;
 use Bdf\Serializer\Metadata\ClassMetadata;
 use Bdf\Serializer\Metadata\Driver\Bdf\Customer;
 use Bdf\Serializer\Metadata\Driver\Bdf\User;
+use Bdf\Serializer\Person;
+use Bdf\Serializer\Token;
 use Bdf\Serializer\Type\Type;
 use Bdf\Serializer\WithPsalmAnnotation;
 use DateTime;
@@ -63,5 +66,35 @@ class AnnotationsDriverTest extends TestCase
 
         $this->assertEquals('array', $metadata->property('arrayStructure')->type()->name());
         $this->assertEquals(\ArrayObject::class, $metadata->property('withGenerics')->type()->name());
+        $this->assertEquals(\ArrayObject::class, $metadata->property('withSingleGeneric')->type()->name());
+        $this->assertEquals(Person::class, $metadata->property('withSingleGeneric')->type()->subType()->name());
+        $this->assertEquals('string', $metadata->property('nonEmptyString')->type()->name());
+        $this->assertTrue($metadata->property('nonEmptyString')->type()->isBuildin());
+    }
+
+    /**
+     * @group test
+     */
+    public function test_load_annotations_with_template()
+    {
+        $driver = new AnnotationsDriver();
+
+        $reflection = new ReflectionClass(Lexer::class);
+        $metadata = $driver->getMetadataForClass($reflection);
+
+        $this->assertInstanceOf(ClassMetadata::class, $metadata);
+        $this->assertEquals(Lexer::class, $metadata->name());
+
+        $this->assertEquals('array', $metadata->property('tokens')->type()->name());
+        $this->assertTrue($metadata->property('tokens')->type()->isArray());
+        $this->assertEquals(Token::class, $metadata->property('tokens')->type()->subType()->name());
+        $this->assertFalse($metadata->property('tokens')->type()->subType()->isArray());
+        $this->assertNull($metadata->property('tokens')->type()->subType()->subType());
+
+        $reflection = new ReflectionClass(Token::class);
+        $metadata = $driver->getMetadataForClass($reflection);
+        $this->assertEquals(Token::class, $metadata->name());
+        $this->assertEquals('mixed', $metadata->property('key')->type()->name());
+        $this->assertEquals('mixed', $metadata->property('value')->type()->name());
     }
 }
