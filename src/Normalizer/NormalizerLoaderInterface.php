@@ -35,8 +35,9 @@ interface NormalizerLoaderInterface
      * Register a normalizer
      *
      * @param NormalizerInterface $normalizer
+     * @param bool $prepend If true, the normalizer will be register on top, so it will takes precedence.
      *
      * @return $this
      */
-    public function addNormalizer(NormalizerInterface $normalizer);
+    public function addNormalizer(NormalizerInterface $normalizer/*, bool $prepend = false*/);
 }

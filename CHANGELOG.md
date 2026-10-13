@@ -1,3 +1,8 @@
+v1.4.0
+------
+
+* Add support for prepend normalizer on `NormalizerLoaderInterface::addNormalize()`
+
 v1.3.0
 ------
 
