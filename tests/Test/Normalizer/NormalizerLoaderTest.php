@@ -2,7 +2,10 @@
 
 namespace Bdf\Serializer\Normalizer;
 
+use Bdf\Serializer\Context\DenormalizationContext;
+use Bdf\Serializer\Context\NormalizationContext;
 use Bdf\Serializer\Exception\UnexpectedValueException;
+use Bdf\Serializer\Type\Type;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -61,6 +64,76 @@ class NormalizerLoaderTest extends TestCase
         $loader->addNormalizer($normalizer);
 
         $this->assertEquals($normalizer, $loader->getNormalizer('unknown'));
+    }
+
+    /**
+     *
+     */
+    public function test_add_normalizer_prepend()
+    {
+        $normalizer1 = new class implements NormalizerInterface
+        {
+            public function normalize($data, NormalizationContext $context) {}
+
+            public function denormalize($data, Type $type, DenormalizationContext $context) {}
+
+            public function supports(string $className): bool
+            {
+                return true;
+            }
+        };
+        $normalizer2 = new class implements NormalizerInterface
+        {
+            public function normalize($data, NormalizationContext $context) {}
+
+            public function denormalize($data, Type $type, DenormalizationContext $context) {}
+
+            public function supports(string $className): bool
+            {
+                return true;
+            }
+        };
+
+        $loader = $this->getLoader();
+        $loader->addNormalizer($normalizer1, true);
+        $loader->addNormalizer($normalizer2, true);
+
+        $this->assertEquals($normalizer2, $loader->getNormalizer('unknown'));
+    }
+
+    /**
+     *
+     */
+    public function test_add_normalizer_not_prepend()
+    {
+        $normalizer1 = new class implements NormalizerInterface
+        {
+            public function normalize($data, NormalizationContext $context) {}
+
+            public function denormalize($data, Type $type, DenormalizationContext $context) {}
+
+            public function supports(string $className): bool
+            {
+                return true;
+            }
+        };
+        $normalizer2 = new class implements NormalizerInterface
+        {
+            public function normalize($data, NormalizationContext $context) {}
+
+            public function denormalize($data, Type $type, DenormalizationContext $context) {}
+
+            public function supports(string $className): bool
+            {
+                return true;
+            }
+        };
+
+        $loader = $this->getLoader();
+        $loader->addNormalizer($normalizer1);
+        $loader->addNormalizer($normalizer2);
+
+        $this->assertEquals($normalizer1, $loader->getNormalizer('unknown'));
     }
 
     /**

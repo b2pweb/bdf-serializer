@@ -4,6 +4,8 @@ namespace Bdf\Serializer\Normalizer;
 
 use Bdf\Serializer\Exception\UnexpectedValueException;
 
+use function array_unshift;
+
 /**
  * NormalizerLoader
  */
@@ -38,10 +40,12 @@ class NormalizerLoader implements NormalizerLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function addNormalizer(NormalizerInterface $normalizer)
+    public function addNormalizer(NormalizerInterface $normalizer, bool $prepend = false)
     {
         if ($normalizer instanceof AutoRegisterInterface) {
             $normalizer->registerTo($this);
+        } elseif ($prepend) {
+            array_unshift($this->normalizers, $normalizer);
         } else {
             $this->normalizers[] = $normalizer;
         }
