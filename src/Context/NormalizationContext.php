@@ -6,6 +6,8 @@ use Bdf\Serializer\Exception\CircularReferenceException;
 use Bdf\Serializer\Metadata\PropertyMetadata;
 use Bdf\Serializer\Normalizer\NormalizerInterface;
 
+use function spl_object_id;
+
 /**
  * NormalizationContext
  *
@@ -267,18 +269,19 @@ class NormalizationContext extends Context
      */
     public function assertNoCircularReference($object): string
     {
-        $objectHash = spl_object_hash($object);
+        // @todo return int on next major version
+        $objectHash = spl_object_id($object);
 
         if (!isset($this->objectReferences[$objectHash])) {
             $this->objectReferences[$objectHash] = 1;
 
-            return $objectHash;
+            return (string) $objectHash;
         }
 
         if ($this->objectReferences[$objectHash] < $this->options[self::CIRCULAR_REFERENCE_LIMIT]) {
             $this->objectReferences[$objectHash]++;
 
-            return $objectHash;
+            return (string) $objectHash;
         }
 
         unset($this->objectReferences[$objectHash]);
@@ -295,6 +298,7 @@ class NormalizationContext extends Context
      */
     public function releaseReference(string $objectHash): void
     {
+        // @todo use int as argument on next version
         // Release the memory if depth is equal to 1
         if ($this->objectReferences[$objectHash] === 1) {
             unset($this->objectReferences[$objectHash]);
