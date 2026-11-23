@@ -8,6 +8,8 @@ use Bdf\Serializer\Serializer;
 use Bdf\Serializer\Type\Type;
 use PHPUnit\Framework\TestCase;
 
+use function spl_object_id;
+
 /**
  * @group Bdf_Serializer
  * @group Bdf_Serializer_Context
@@ -265,7 +267,7 @@ class NormalizationContextTest extends TestCase
     {
         $object = new \stdClass;
 
-        $this->assertSame(spl_object_hash($object), $this->context()->assertNoCircularReference($object));
+        $this->assertSame((string) spl_object_id($object), $this->context()->assertNoCircularReference($object));
     }
 
     /**
